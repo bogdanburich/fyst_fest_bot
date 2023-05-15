@@ -1,10 +1,10 @@
 import sys
 
-from config import BOT_TOKEN, BUTTONS, HELLO_TEXT
+from config import BOT_TOKEN, BUTTONS, HELLO_TEXT, ABOUT_TEXT, NIHT_PROGRAMM
 from filters import BASE_MESSAGE_FILTERS
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
 from telegram.ext import (Application, CommandHandler, ContextTypes,
-                          MessageHandler)
+                        MessageHandler)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -27,37 +27,47 @@ async def main_menu(update: Update,
 
     chat_id = update.effective_chat.id
     await context.bot.send_message(chat_id=chat_id,
-                                   text='Choose one:',
-                                   reply_markup=keyboard_markup)
+                                text='Choose one:',
+                                reply_markup=keyboard_markup)
+    
 
 
-async def about():
+async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    await context.bot.send_message(chat_id=chat_id, text=ABOUT_TEXT)
+
+
+async def agenda(update: Update, context: ContextTypes.DEFAULT_TYPE):
     pass
 
 
-async def agenda():
+async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     pass
 
 
-async def menu():
-    pass
+async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.message.from_user.id
+    context.chat_data[user_id] = "request_song"
 
-
-async def request_song():
-    pass
-
-
-async def send_photo():
-    pass
+async def send_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.message.from_user.id
+    context.chat_data[user_id] = "send_photo"
 
 
 async def any_message(update: Update,
-                      context: ContextTypes.DEFAULT_TYPE) -> None:
+                    context: ContextTypes.DEFAULT_TYPE) -> None:
     if context.chat_data:
-        pass
+        ...
     if update.message.text == BUTTONS['back']:
         await main_menu(update, context)
-
+    elif update.message.text == BUTTONS['about']:
+        await about(update, context)
+    elif update.message.text == BUTTONS['agenda']:
+        await agenda(update, context)
+    elif update.message.text == BUTTONS['menu']:
+        await menu(update, context)
+    elif update.message.text == BUTTONS['request_song']:
+        await request_song(update, context)
 
 def check_creds() -> bool:
     return all([
