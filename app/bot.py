@@ -67,7 +67,6 @@ def check_creds() -> bool:
 
 def main():
     if not check_creds():
-        print('nnn')
         sys.exit()
 
     application = Application.builder().token(BOT_TOKEN).build()
