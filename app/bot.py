@@ -1,6 +1,8 @@
 import sys
 
-from config import BOT_TOKEN, BUTTONS, HELLO_TEXT, ABOUT_TEXT, NIHT_PROGRAMM
+import os
+from config import BOT_TOKEN, BUTTONS, HELLO_TEXT, ABOUT_TEXT, NIHT_PROGRAMM,\
+    MENU_MESSAGE
 from filters import BASE_MESSAGE_FILTERS
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
 from telegram.ext import (Application, CommandHandler, ContextTypes,
@@ -33,8 +35,8 @@ async def main_menu(update: Update,
 
 
 async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.effective_chat.id
-    await context.bot.send_message(chat_id=chat_id, text=ABOUT_TEXT)
+    user_id = update.effective_chat.id
+    await context.bot.send_message(chat_id=user_id, text=ABOUT_TEXT)
 
 
 async def agenda(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -42,8 +44,13 @@ async def agenda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    pass
-
+    user_id = update.message.from_user.id
+    context.chat_data[user_id] = "menu"
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(dir_path, "static/menu.pdf")
+    with open(file_path, "rb") as file:
+        await context.bot.send_message(chat_id=user_id, text=MENU_MESSAGE)
+        await context.bot.send_document(chat_id=user_id, document=file)
 
 async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id

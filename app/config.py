@@ -44,4 +44,6 @@ ABOUT_TEXT = """
 📷 Send Photo - Send a photo
 """
 
+MENU_MESSAGE = "One moment..."
+
 NIHT_PROGRAMM = "tuz tuz tuz"
