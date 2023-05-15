@@ -2,7 +2,7 @@ import sys
 
 import os
 from config import BOT_TOKEN, BUTTONS, HELLO_TEXT, ABOUT_TEXT, NIHT_PROGRAMM,\
-    MENU_MESSAGE
+    MENU_MESSAGE, USERS_ID
 from filters import BASE_MESSAGE_FILTERS
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
 from telegram.ext import (Application, CommandHandler, ContextTypes,
@@ -25,6 +25,11 @@ async def main_menu(update: Update,
         [KeyboardButton(BUTTONS['request_song'])],
         [KeyboardButton(BUTTONS['send_photo'])],
     ]
+    
+    user_id = update.message.from_user.id
+    if user_id in USERS_ID:
+        buttons.append([KeyboardButton(BUTTONS['send_message'])])
+        
     keyboard_markup = ReplyKeyboardMarkup(buttons)
 
     chat_id = update.effective_chat.id

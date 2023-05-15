@@ -31,7 +31,8 @@ BUTTONS = {
     'menu': '🍕 Menu',
     'request_song': '🎵 Request Song',
     'send_photo': '📷 Send Photo',
-    'back': '🔙 Back'
+    'back': '🔙 Back',
+    'send_message': '📝 Send message'
 }
 
 ABOUT_TEXT = """ 
@@ -47,3 +48,5 @@ ABOUT_TEXT = """
 MENU_MESSAGE = "One moment..."
 
 NIHT_PROGRAMM = "tuz tuz tuz"
+
+USERS_ID = [402816936]
