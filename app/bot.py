@@ -65,7 +65,7 @@ async def any_message(update: Update,
         await about(update, context)
     elif update.message.text == BUTTONS['menu']:
         await menu(update, context)
-        
+
 
 def check_creds() -> bool:
     return all([
