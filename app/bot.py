@@ -12,10 +12,13 @@ from functions.send_message_function import send_messages, get_apply
 from functions.main_menu_function import main_menu_func
 from functions.get_menu_function import get_pdf_menu
 
+
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.effective_chat.send_message(HELLO_TEXT)
     await main_menu_func(update, context)
-
+    
 async def main_menu(update: Update,
                     context: ContextTypes.DEFAULT_TYPE) -> None:
     await main_menu_func(update, context)
@@ -36,11 +39,10 @@ async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def send_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ...
     
-async def send_apply(update: Update,
-                    context: ContextTypes.DEFAULT_TYPE):
-        await get_apply(update, context)
+async def send_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await get_apply(update, context)
 
-async def any_message(update: Update,
+async def any_message(update: Update, 
                     context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
     if context.chat_data.get(user_id) and user_id in ADMIN_ID:
@@ -63,10 +65,10 @@ async def any_message(update: Update,
             return
     await main_menu(update, context)
             
-async def handle_callback_query(update: Update, context:
-                                                    ContextTypes.DEFAULT_TYPE):
+async def handle_callback_query(update: Update, 
+                                context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query.data.split("__")[0]
-    if query =="send":
+    if query == "send":
         await send_messages(update, context)
     elif query == "delete":
         chat_id = update.callback_query.message.chat.id
@@ -86,7 +88,6 @@ def main():
     application.add_handler(MessageHandler(BASE_MESSAGE_FILTERS, any_message))
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CallbackQueryHandler(handle_callback_query))
-
 
     application.run_polling()
 
