@@ -1,6 +1,6 @@
+from config import ADMIN_ID, BUTTONS
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
-from telegram.ext import (ContextTypes)
-from config import BUTTONS, ADMIN_ID
+from telegram.ext import ContextTypes
 
 
 async def main_menu_func(update: Update, context: ContextTypes.DEFAULT_TYPE

@@ -1,15 +1,15 @@
 import sys
 
-from config import (BOT_TOKEN, BUTTONS, HELLO_TEXT, ABOUT_TEXT, ADMIN_ID,
+from telegram import Update
+from telegram.ext import (Application, CallbackQueryHandler, CommandHandler,
+                          ContextTypes, MessageHandler)
+
+from config import (ABOUT_TEXT, ADMIN_ID, BOT_TOKEN, BUTTONS, HELLO_TEXT,
                     WRITE_MESSAGE)
 from filters import BASE_MESSAGE_FILTERS
-from telegram import Update
-from telegram.ext import (Application, CommandHandler, ContextTypes,
-                          MessageHandler, CallbackQueryHandler)
-
 from functions.get_pdf_menu_function import get_pdf_menu
-from functions.send_message_functionю import send_messages, get_apply
 from functions.main_menu_function import main_menu_func
+from functions.send_message_functionю import get_apply, send_messages
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

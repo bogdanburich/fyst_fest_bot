@@ -1,7 +1,8 @@
 import os
+
+from config import MENU_MESSAGE
 from telegram import Update
 from telegram.ext import ContextTypes
-from config import MENU_MESSAGE
 
 
 async def get_pdf_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
