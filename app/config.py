@@ -3,7 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv("env_file.env")
+load_dotenv()
 
 BASE_DIR = str(Path(__file__).resolve().parent)
 
@@ -13,7 +13,7 @@ ERRORS = {
 }
 
 ADMIN_IDS = [
-    116553777,
+    116553777
 ]
 
 PHOTO_CHANNEL_ID = -1916305987
@@ -48,6 +48,6 @@ ABOUT_TEXT = """
 
 MENU_MESSAGE = "One moment..."
 
-ADMIN_ID = [402816936]
+ADMIN_ID = [402816936, 295699541]
 
 WRITE_MESSAGE = "Write your message..."

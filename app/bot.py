@@ -70,7 +70,8 @@ async def any_message(update: Update,
             context.chat_data[user_id] = "send_message"
             await context.bot.send_message(user_id, WRITE_MESSAGE)
             return
-    await main_menu(update, context)
+    user_id = update.message.from_user.id
+    context.chat_data[user_id] = {}
 
 
 def check_creds() -> bool:

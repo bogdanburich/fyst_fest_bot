@@ -5,8 +5,7 @@ from config import BUTTONS, ADMIN_ID
 
 async def main_menu_func(update: Update, context: ContextTypes.DEFAULT_TYPE
                          ) -> None:
-    user_id = update.message.from_user.id
-    context.chat_data[user_id] = {}
+
     buttons = [
         [
             KeyboardButton(BUTTONS['about']),
