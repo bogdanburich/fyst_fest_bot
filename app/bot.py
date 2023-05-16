@@ -81,7 +81,6 @@ def main():
 
     application.add_handler(MessageHandler(BASE_MESSAGE_FILTERS, any_message))
     application.add_handler(CommandHandler('start', start))
-
     application.run_polling()
 
 
