@@ -36,7 +36,6 @@ BUTTONS = {
 }
 
 ABOUT_TEXT = """
-
 🔖 Agenda - Get a program for today
 
 🍕 Menu - Get the menu
