@@ -1,3 +1,4 @@
+import os
 import sys
 
 from config import BOT_TOKEN, BUTTONS, HELLO_TEXT, ABOUT_TEXT
@@ -5,6 +6,10 @@ from filters import BASE_MESSAGE_FILTERS
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
 from telegram.ext import Application, CommandHandler, ContextTypes,\
                           MessageHandler
+
+from functions.get_pdf_menu_function import get_pdf_menu
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -40,8 +45,8 @@ async def agenda():
     pass
 
 
-async def menu():
-    pass
+async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await get_pdf_menu(update, context)
 
 
 async def request_song():
@@ -58,7 +63,9 @@ async def any_message(update: Update,
         pass
     if update.message.text == BUTTONS['about']:
         await about(update, context)
-
+    elif update.message.text == BUTTONS['menu']:
+        await menu(update, context)
+        
 
 def check_creds() -> bool:
     return all([
