@@ -3,7 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv("env_file.env")
+load_dotenv()
 
 BASE_DIR = str(Path(__file__).resolve().parent)
 
@@ -36,7 +36,6 @@ BUTTONS = {
 }
 
 ABOUT_TEXT = """
-
 🔖 Agenda - Get a program for today
 
 🍕 Menu - Get the menu
