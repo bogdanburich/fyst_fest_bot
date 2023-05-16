@@ -3,7 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv("env_file.env")
 
 BASE_DIR = str(Path(__file__).resolve().parent)
 
@@ -34,3 +34,13 @@ BUTTONS = {
     'send_photo': '📷 Send Photo',
     'back': '🔙 Back'
 }
+
+ABOUT_TEXT = """ 
+🔖 Agenda - Get a program for today
+
+🍕 Menu - Get the menu
+
+🎵 Request Song - Order music
+
+📷 Send Photo - Send a photo
+"""
