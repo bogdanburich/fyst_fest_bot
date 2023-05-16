@@ -45,6 +45,7 @@ async def any_message(update: Update,
     user_id = update.message.from_user.id
     if context.chat_data.get(user_id) and user_id in ADMIN_ID:
         await send_apply(update, context)
+        return
     elif update.message.text == BUTTONS['back']:
         await main_menu(update, context)
     elif update.message.text == BUTTONS['about']:
@@ -59,6 +60,7 @@ async def any_message(update: Update,
         if user_id in ADMIN_ID:
             context.chat_data[user_id] = "send_message"
             await context.bot.send_message(user_id, WRITE_MESSAGE)
+            return
     await main_menu(update, context)
             
 async def handle_callback_query(update: Update, context:
@@ -71,13 +73,10 @@ async def handle_callback_query(update: Update, context:
         message_id = update.callback_query.message.message_id
         await context.bot.delete_message(chat_id, message_id)
 
-
 def check_creds() -> bool:
     return all([
         BOT_TOKEN
-    ])
-    
-
+    ])    
 
 def main():
     if not check_creds():
