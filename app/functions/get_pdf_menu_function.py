@@ -1,12 +1,12 @@
 import os
 from telegram import Update
 from telegram.ext import ContextTypes
-from config import MENU_MESSAGE
+from config import MENU_MESSAGE, BASE_DIR
 
 
 async def get_pdf_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    menu_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    menu_path = menu_path+"/static/menu.pdf"
+    menu_path = os.path.join(BASE_DIR, "static")
+    menu_path = os.path.join(menu_path, "menu.pdf")
     chat_id = update.message.from_user.id
     context.chat_data[chat_id] = "menu"
     menu_doc = open(menu_path, 'rb')

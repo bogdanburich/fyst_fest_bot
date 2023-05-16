@@ -1,15 +1,12 @@
-import os
 import sys
 
-from config import BOT_TOKEN, BUTTONS, HELLO_TEXT, ABOUT_TEXT
-from filters import BASE_MESSAGE_FILTERS
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
-from telegram.ext import Application, CommandHandler, ContextTypes,\
-                          MessageHandler
+from telegram.ext import (Application, CommandHandler, ContextTypes,
+                          MessageHandler)
 
+from config import ABOUT_TEXT, BOT_TOKEN, BUTTONS, HELLO_TEXT
+from filters import BASE_MESSAGE_FILTERS
 from functions.get_pdf_menu_function import get_pdf_menu
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
