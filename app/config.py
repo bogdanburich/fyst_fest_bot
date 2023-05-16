@@ -32,7 +32,7 @@ BUTTONS = {
     'menu': '🍕 Menu',
     'request_song': '🎵 Request Song',
     'send_photo': '📷 Send Photo',
-    'back': '🔙 Back'
+    'send_message': '📝 Send message'
 }
 
 ABOUT_TEXT = """
@@ -47,3 +47,7 @@ ABOUT_TEXT = """
 """
 
 MENU_MESSAGE = "One moment..."
+
+ADMIN_ID = [402816936]
+
+WRITE_MESSAGE = "Write your message..."
