@@ -1,10 +1,10 @@
 import sys
 
-from config import BOT_TOKEN, BUTTONS, HELLO_TEXT, ABOUT_TEXT
+from config import ABOUT_TEXT, BOT_TOKEN, BUTTONS, HELLO_TEXT
 from filters import BASE_MESSAGE_FILTERS
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
-from telegram.ext import Application, CommandHandler, ContextTypes,\
-                          MessageHandler
+from telegram.ext import (Application, CommandHandler, ContextTypes,
+                          MessageHandler)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
