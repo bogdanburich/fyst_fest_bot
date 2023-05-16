@@ -32,8 +32,9 @@ BUTTONS = {
     'request_song': '🎵 Request Song',
     'send_photo': '📷 Send Photo',
     'back': '🔙 Back',
-    'send_message': '📝 Send message'
+    'send_message': '📝 Send message',
 }
+
 
 ABOUT_TEXT = """ 
 🔖 Agenda - Get a program for today
@@ -49,4 +50,8 @@ MENU_MESSAGE = "One moment..."
 
 NIHT_PROGRAMM = "tuz tuz tuz"
 
-USERS_ID = [402816936]
+ADMIN_ID = [402816936]
+
+WRITE_MESSAGE = "Write your message..."
+
+CANCEL_DIALOG = "Dialog was send"
