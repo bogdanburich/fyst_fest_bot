@@ -10,6 +10,5 @@ async def get_pdf_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.from_user.id
     context.chat_data[chat_id] = "menu"
     menu_doc = open(menu_path, 'rb')
-    context.bot.send_document(chat_id, menu_doc)
     await context.bot.send_message(chat_id=chat_id, text=MENU_MESSAGE)
-    await context.bot.send_document(chat_id=chat_id, document=menu_doc)
+    await context.bot.send_document(chat_id, menu_doc)
