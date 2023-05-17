@@ -1,7 +1,7 @@
 import sys
 
-from config import (ABOUT_TEXT, BOT_TOKEN, BUTTONS, HELLO_TEXT, MENU_FILE,
-                    MENU_MESSAGE)
+from config import (ABOUT_TEXT, AGENDA_TEXT, BOT_TOKEN, BUTTONS, HELLO_TEXT,
+                    MENU_FILE, MENU_MESSAGE)
 from filters import BASE_MESSAGE_FILTERS
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update, error
 from telegram.ext import (Application, CommandHandler, ContextTypes,
@@ -37,8 +37,8 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=user_id, text=ABOUT_TEXT)
 
 
-async def agenda():
-    pass
+async def agenda(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(AGENDA_TEXT)
 
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -67,6 +67,8 @@ async def any_message(update: Update,
         await about(update, context)
     elif update.message.text == BUTTONS['menu']:
         await menu(update, context)
+    elif update.message.text == BUTTONS['agenda']:
+        await agenda(update, context)
 
 
 def check_creds() -> bool:
