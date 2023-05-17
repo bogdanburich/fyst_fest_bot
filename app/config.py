@@ -56,3 +56,5 @@ DELETE_TEXT = '❌ Delete'
 SEND_QUESTION = 'Send message?:\n'
 
 GOT_MESSAGE = 'people got message'
+
+BD_FILE = os.path.join(BASE_DIR, 'users_id.db')
