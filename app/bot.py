@@ -1,11 +1,12 @@
 import sys
 
-from config import (ABOUT_TEXT, AGENDA_TEXT, BOT_TOKEN, BUTTONS, HELLO_TEXT,
-                    MENU_FILE, MENU_MESSAGE)
+from config import (ABOUT_TEXT, ADMIN_IDS, AGENDA_TEXT, BOT_TOKEN, BUTTONS,
+                    HELLO_TEXT, MENU_FILE, MENU_MESSAGE, WRITE_MESSAGE)
 from filters import BASE_MESSAGE_FILTERS
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update, error
-from telegram.ext import (Application, CommandHandler, ContextTypes,
-                          MessageHandler)
+from telegram.ext import (Application, CallbackQueryHandler, CommandHandler,
+                          ContextTypes, MessageHandler)
+from utils import get_apply, send_messages
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -24,11 +25,12 @@ async def main_menu(update: Update,
         [KeyboardButton(BUTTONS['request_song'])],
         [KeyboardButton(BUTTONS['send_photo'])],
     ]
+    user_id = update.message.from_user.id
+    if user_id in ADMIN_IDS:
+        buttons.append([KeyboardButton(BUTTONS['send_message'])])
     keyboard_markup = ReplyKeyboardMarkup(buttons)
-
     chat_id = update.effective_chat.id
-    await context.bot.send_message(chat_id=chat_id,
-                                   text='Choose one:',
+    await context.bot.send_message(chat_id=chat_id, text='Choose one:',
                                    reply_markup=keyboard_markup)
 
 
@@ -62,14 +64,36 @@ async def send_photo():
 
 async def any_message(update: Update,
                       context: ContextTypes.DEFAULT_TYPE) -> None:
-    if context.chat_data:
-        pass
+    flag = False
+    user_id = update.message.from_user.id
+    if context.chat_data.get(user_id) and user_id in ADMIN_IDS:
+        if context.chat_data[user_id] == "send_message":
+            await get_apply(update, context)
+            flag = True
     if update.message.text == BUTTONS['about']:
         await about(update, context)
     elif update.message.text == BUTTONS['menu']:
         await menu(update, context)
     elif update.message.text == BUTTONS['agenda']:
         await agenda(update, context)
+    elif update.message.text == BUTTONS['send_message']:
+        if user_id in ADMIN_IDS:
+            context.chat_data[user_id] = "send_message"
+            await context.bot.send_message(user_id, WRITE_MESSAGE)
+            flag = True
+    if flag is False:
+        context.chat_data[user_id] = {}
+
+
+async def handle_callback_query(update: Update,
+                                context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query.data.split("__")[0]
+    chat_id = update.callback_query.message.chat.id
+    if query == "send":
+        await send_messages(update, context)
+    elif query == "delete":
+        message_id = update.callback_query.message.message_id
+        await context.bot.delete_message(chat_id, message_id)
 
 
 def check_creds() -> bool:
@@ -86,6 +110,7 @@ def main():
 
     application.add_handler(MessageHandler(BASE_MESSAGE_FILTERS, any_message))
     application.add_handler(CommandHandler('start', start))
+    application.add_handler(CallbackQueryHandler(handle_callback_query))
 
     application.run_polling()
 

@@ -13,7 +13,7 @@ ERRORS = {
 }
 
 ADMIN_IDS = [
-    116553777,
+    116553777, 402816936, 295699541
 ]
 
 PHOTO_CHANNEL_ID = -1916305987
@@ -32,7 +32,7 @@ BUTTONS = {
     'menu': '🍕 Menu',
     'request_song': '🎵 Request Song',
     'send_photo': '📷 Send Photo',
-    'back': '🔙 Back'
+    'send_message': '📝 Send message'
 }
 
 ABOUT_TEXT = '''
@@ -46,3 +46,5 @@ ABOUT_TEXT = '''
 '''
 
 MENU_MESSAGE = 'One moment...'
+
+WRITE_MESSAGE = 'Write your message...'
