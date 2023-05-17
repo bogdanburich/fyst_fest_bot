@@ -48,3 +48,11 @@ ABOUT_TEXT = '''
 MENU_MESSAGE = 'One moment...'
 
 WRITE_MESSAGE = 'Write your message...'
+
+SEND_TEXT = '✅ Send'
+
+DELETE_TEXT = '❌ Delete'
+
+SEND_QUESTION = 'Send message?:\n'
+
+GOT_MESSAGE = 'people got message'
