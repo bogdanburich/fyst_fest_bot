@@ -39,7 +39,7 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def agenda(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_chat.id
-    await context.bot.send_message(user_id=user_id, text=AGENDA_TEXT)
+    await context.bot.send_message(chat_id=user_id, text=AGENDA_TEXT)
 
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
