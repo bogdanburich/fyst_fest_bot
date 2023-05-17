@@ -1,5 +1,5 @@
-from config import (ADMIN_IDS, DELETE_TEXT, SEND_TEXT, SEND_QUESTION,
-                    GOT_MESSAGE)
+from config import (ADMIN_IDS, DELETE_TEXT, GOT_MESSAGE, SEND_QUESTION,
+                    SEND_TEXT)
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, error
 from telegram.ext import ContextTypes
 
