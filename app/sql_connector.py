@@ -4,7 +4,7 @@ from config import BD_FILE
 
 
 class SqlConnector:
-    def __init__(cls):
+    def __init__(self):
         pass
 
     @classmethod
