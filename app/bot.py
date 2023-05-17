@@ -29,7 +29,6 @@ async def main_menu(update: Update,
     if chat_id in ADMIN_IDS:
         buttons.append([KeyboardButton(BUTTONS['send_message'])])
     keyboard_markup = ReplyKeyboardMarkup(buttons)
-    print(chat_id)
     await context.bot.send_message(chat_id=chat_id, text='Choose one:',
                                    reply_markup=keyboard_markup)
 
