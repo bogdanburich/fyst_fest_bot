@@ -45,4 +45,4 @@ ABOUT_TEXT = """
 📷 Send Photo - Send a photo
 """
 
-MENU_MESSAGE = "One moment..."
+MENU_MESSAGE = 'One moment...'

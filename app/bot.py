@@ -48,7 +48,7 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         await context.bot.send_document(chat_id=chat_id, document=menu_doc)
     except error.TimedOut:
-        ...
+        pass
 
 
 async def request_song():
