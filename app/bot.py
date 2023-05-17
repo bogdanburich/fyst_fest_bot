@@ -1,5 +1,11 @@
 import sys
+<<<<<<< HEAD
 
+=======
+from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
+from telegram.ext import (Application, CommandHandler, ContextTypes,
+                          MessageHandler)
+>>>>>>> c8441f7b806a4b050454fbbe60ff0ad9a12118e7
 from config import ABOUT_TEXT, BOT_TOKEN, BUTTONS, HELLO_TEXT
 from filters import BASE_MESSAGE_FILTERS
 from functions.get_pdf_menu_function import get_pdf_menu
