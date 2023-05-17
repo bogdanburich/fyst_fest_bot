@@ -1,5 +1,5 @@
 from config import ADMIN_IDS
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, error
 from telegram.ext import ContextTypes
 
 
@@ -44,5 +44,5 @@ async def try_send_message(customer_counter: int,
         await bot.send_message(customer_id, text=text_message)
         customer_counter = customer_counter + 1
         return customer_counter
-    except Exception():
+    except error.BadRequest:
         return customer_counter
