@@ -1,11 +1,11 @@
 import sys
 
-from config import ABOUT_TEXT, BOT_TOKEN, BUTTONS, HELLO_TEXT
+from config import (ABOUT_TEXT, BOT_TOKEN, BUTTONS, HELLO_TEXT, MENU_FILE,
+                    MENU_MESSAGE)
 from filters import BASE_MESSAGE_FILTERS
-from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
+from telegram import KeyboardButton, ReplyKeyboardMarkup, Update, error
 from telegram.ext import (Application, CommandHandler, ContextTypes,
                           MessageHandler)
-from utils import get_pdf_menu
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -42,7 +42,13 @@ async def agenda():
 
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await get_pdf_menu(update, context)
+    chat_id = update.message.from_user.id
+    menu_doc = open(MENU_FILE, 'rb')
+    await context.bot.send_message(chat_id=chat_id, text=MENU_MESSAGE)
+    try:
+        await context.bot.send_document(chat_id=chat_id, document=menu_doc)
+    except error.TimedOut:
+        ...
 
 
 async def request_song():
