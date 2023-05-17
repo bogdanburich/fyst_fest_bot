@@ -10,8 +10,9 @@ async def forward_message(message, channel_id):
 
 async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
-    context.chat_data[user_id] = update.message.text
     message_text = context.chat_data[user_id]
+    context.chat_data[user_id] = message_text
+    
     call = f'send__{message_text}'
     call_del = 'delete__'
     callback_button_send = InlineKeyboardButton(SEND_TEXT, callback_data=call)
