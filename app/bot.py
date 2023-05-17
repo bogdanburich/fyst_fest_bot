@@ -1,7 +1,7 @@
 import sys
 
-from config import (ABOUT_TEXT, ADMIN_ID, BOT_TOKEN, BUTTONS, HELLO_TEXT,
-                    WRITE_MESSAGE)
+from config import (ABOUT_TEXT, ADMIN_ID, AGENDA_TEXT, BOT_TOKEN, BUTTONS,
+                    HELLO_TEXT, WRITE_MESSAGE)
 from filters import BASE_MESSAGE_FILTERS
 from functions.get_pdf_menu_function import get_pdf_menu
 from functions.main_menu_function import main_menu_func
@@ -26,8 +26,8 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=user_id, text=ABOUT_TEXT)
 
 
-async def agenda():
-    pass
+async def agenda(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(AGENDA_TEXT)
 
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -70,6 +70,8 @@ async def any_message(update: Update,
             context.chat_data[user_id] = "send_message"
             await context.bot.send_message(user_id, WRITE_MESSAGE)
             flag = True
+    elif update.message.text == BUTTONS['agenda']:
+        await agenda(update, context)
     if flag is False:
         user_id = update.message.from_user.id
         context.chat_data[user_id] = {}

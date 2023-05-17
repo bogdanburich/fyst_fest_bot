@@ -50,3 +50,7 @@ MENU_MESSAGE = "One moment..."
 ADMIN_ID = [402816936, 295699541]
 
 WRITE_MESSAGE = "Write your message..."
+
+AGENDA_TEXT = """
+Agenda info...
+"""
