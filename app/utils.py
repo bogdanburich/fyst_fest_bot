@@ -1,5 +1,5 @@
-from config import (ADMIN_IDS, DELETE_TEXT, GOT_MESSAGE, SEND_QUESTION,
-                    SEND_TEXT)
+from config import DELETE_TEXT, GOT_MESSAGE, SEND_QUESTION, SEND_TEXT
+from sql_connector import SqlConnector
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, error
 from telegram.ext import ContextTypes
 
@@ -25,26 +25,24 @@ async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def send_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    customer_counter = 0
+    message_counter = [0]
     user_id = update.callback_query.from_user.id
     bot = context.bot
     query = update.callback_query.data
+    customers = SqlConnector.get_users_id()
     text_message = query.split('__')[1]
-    for customer_id in context.chat_data:
-        if customer_id not in ADMIN_IDS:
-            customer_counter = await try_send_message(customer_counter, bot,
-                                                      customer_id,
-                                                      text_message)
-    admin_message = f'{customer_counter} {GOT_MESSAGE}'
+    for cust in customers:
+        if cust != user_id:
+            await try_send_message(message_counter, bot, cust, text_message)
+    admin_message = f'{message_counter[0]} {GOT_MESSAGE}'
     await bot.send_message(user_id, text=admin_message)
 
 
-async def try_send_message(customer_counter: int,
+async def try_send_message(message_counter: int,
                            bot: ContextTypes.DEFAULT_TYPE, customer_id: int,
                            text_message: str):
     try:
         await bot.send_message(customer_id, text=text_message)
-        customer_counter = customer_counter + 1
-        return customer_counter
+        message_counter[0] += 1
     except error.BadRequest:
-        return customer_counter
+        pass

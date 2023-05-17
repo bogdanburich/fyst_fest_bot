@@ -18,11 +18,20 @@ class SqlConnector:
             cursor.close()
 
     @classmethod
-    def get_user_id(self, user_id):
+    def get_user_id(self, user_id: str):
         with sqlite3.connect(BD_FILE) as conn:
             cursor = conn.cursor()
             cursor.execute(f'''SELECT user_id, state
                            FROM users WHERE user_id = {user_id};''')
+            user_info = cursor.fetchone()
+            cursor.close()
+        return user_info
+
+    @classmethod
+    def get_users_id(self):
+        with sqlite3.connect(BD_FILE) as conn:
+            cursor = conn.cursor()
+            cursor.execute('''SELECT user_id FROM users;''')
             user_info = cursor.fetchone()
             cursor.close()
         return user_info

@@ -3,6 +3,7 @@ import sys
 from config import (ABOUT_TEXT, ADMIN_IDS, AGENDA_TEXT, BOT_TOKEN, BUTTONS,
                     HELLO_TEXT, MENU_FILE, MENU_MESSAGE, WRITE_MESSAGE)
 from filters import BASE_MESSAGE_FILTERS
+from sql_connector import SqlConnector
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update, error
 from telegram.ext import (Application, CallbackQueryHandler, CommandHandler,
                           ContextTypes, MessageHandler)
@@ -10,8 +11,12 @@ from utils import get_apply, send_messages
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user_id = update.message.from_user.id
     await update.effective_chat.send_message(HELLO_TEXT)
     await main_menu(update, context)
+    user = SqlConnector.get_user_id(user_id)
+    if user is None:
+        SqlConnector.insert_user_id(user_id)
 
 
 async def main_menu(update: Update,
@@ -67,6 +72,7 @@ async def any_message(update: Update,
     user_id = update.message.from_user.id
     if context.chat_data.get(user_id) and user_id in ADMIN_IDS:
         if context.chat_data[user_id] == "send_message":
+            context.chat_data[user_id] = update.message.text
             await get_apply(update, context)
             flag = True
     if update.message.text == BUTTONS['about']:
