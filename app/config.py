@@ -57,4 +57,12 @@ SEND_QUESTION = 'Send message?:\n'
 
 GOT_MESSAGE = 'people got message'
 
-BD_FILE = os.path.join(BASE_DIR, 'users_id.db')
+DATABASE_NAME = 'fyst_fest.db'
+
+SCRIPT_FILE_NAME = "CREATE_TABLE_users.sql"
+
+SCRIPT_FILE = os.path.join(BASE_DIR, SCRIPT_FILE_NAME)
+
+FYST_FEST_DB = os.path.join(BASE_DIR, DATABASE_NAME)
+
+MESSAGE_QUESTION_TEXT = "Send message?\n"

@@ -3,4 +3,4 @@ venv/
 env_file.env
 __pycache__/
 .vscode/
-app/CREATE TABLE users (.sql
+app/fyst_fest.db
