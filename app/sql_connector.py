@@ -34,9 +34,11 @@ class SqlConnector:
                 cursor.close()
 
     @classmethod
-    def insert_user_id(cls, user_id: int, is_active: str = "") -> None:
-        query = f'''INSERT INTO users(user_id, is_active)
-                 VALUES({user_id}, '{is_active}');'''
+    def insert_or_activate_user(cls, user_id: int, is_active: str = ""
+                                ) -> None:
+        query = f'''INSERT INTO users(user_id)
+                 VALUES({user_id})
+                 ON CONFLICT(user_id) DO UPDATE SET is_active = 1;'''
         cls.__insert_methos(query)
 
     @classmethod
@@ -47,7 +49,7 @@ class SqlConnector:
 
     @classmethod
     def get_users_id(cls) -> tuple:
-        query = '''SELECT user_id FROM users;'''
+        query = '''SELECT user_id FROM users WHERE is_active = 1;'''
         return cls.__select_method(query)
 
     @classmethod

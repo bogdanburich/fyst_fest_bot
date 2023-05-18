@@ -26,7 +26,6 @@ async def send_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
         try:
             await bot.send_message(user_id, text=text_message)
             message_counter += 1
-            SqlConnector.set_user_active(admin_id, True)
         except error.BadRequest:
             SqlConnector.set_user_active(admin_id, False)
     admin_message = f'{message_counter} {GOT_MESSAGE}'
@@ -37,7 +36,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
     user = SqlConnector.get_user(user_id)
     if not user:
-        SqlConnector.insert_user_id(user_id)
+        SqlConnector.insert_or_activate_user(user_id)
     buttons = [
         [
             KeyboardButton(BUTTONS['about']),
@@ -91,7 +90,6 @@ async def any_message(update: Update,
         if context.chat_data[user_id] == "send_message":
             context.chat_data[user_id] = update.message.text
             await get_apply(update, context, MESSAGE_QUESTION_TEXT)
-            SqlConnector.set_user_active(user_id, True)
     if update.message.text == BUTTONS['about']:
         await about(update, context)
     elif update.message.text == BUTTONS['menu']:
@@ -102,7 +100,6 @@ async def any_message(update: Update,
         if user_id in ADMIN_IDS:
             context.chat_data[user_id] = "send_message"
             await context.bot.send_message(user_id, WRITE_MESSAGE)
-            SqlConnector.set_user_active(user_id, True)
     if not dialog_state:
         context.chat_data[user_id] = {}
 
