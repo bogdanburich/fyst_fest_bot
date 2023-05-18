@@ -13,14 +13,14 @@ ERRORS = {
 }
 
 ADMIN_IDS = [
-    116553777,
+    116553777, 402816936, 295699541
 ]
 
 PHOTO_CHANNEL_ID = -1916305987
 
 MUSIC_CHANNEL_ID = -1904676592
 
-HELLO_TEXT = 'Hello'
+HELLO_TEXT = 'Hello\nChoose one:'
 
 AGENDA_TEXT = 'Agenda'
 
@@ -32,7 +32,7 @@ BUTTONS = {
     'menu': '🍕 Menu',
     'request_song': '🎵 Request Song',
     'send_photo': '📷 Send Photo',
-    'back': '🔙 Back'
+    'send_message': '📝 Send message'
 }
 
 ABOUT_TEXT = '''
@@ -46,3 +46,23 @@ ABOUT_TEXT = '''
 '''
 
 MENU_MESSAGE = 'One moment...'
+
+WRITE_MESSAGE = 'Write your message...'
+
+SEND_TEXT = '✅ Send'
+
+DELETE_TEXT = '❌ Delete'
+
+SEND_QUESTION = 'Send message?:\n'
+
+GOT_MESSAGE = 'people got message'
+
+DATABASE_NAME = 'fyst_fest.db'
+
+SCRIPT_FILE_NAME = "CREATE_TABLE_users.sql"
+
+SCRIPT_FILE = os.path.join(BASE_DIR, "migrations", SCRIPT_FILE_NAME)
+
+FYST_FEST_DB = os.path.join(BASE_DIR, DATABASE_NAME)
+
+MESSAGE_QUESTION_TEXT = "Send message?\n"
