@@ -11,6 +11,7 @@ async def forward_message(message, channel_id):
 
 async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE,
                     question_text: str, **actions: dict):
+    '...'
     user_id = update.message.from_user.id
     users_text = update.message.text
     call = {
