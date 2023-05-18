@@ -34,14 +34,14 @@ class SqlConnector:
                 cursor.close()
 
     @classmethod
-    def insert_user_id(cls, user_id: int, state: str = "") -> None:
-        query = f'''INSERT INTO users(user_id, state)
-                 VALUES({user_id}, '{state}');'''
+    def insert_user_id(cls, user_id: int, is_active: str = "") -> None:
+        query = f'''INSERT INTO users(user_id, is_active)
+                 VALUES({user_id}, '{is_active}');'''
         cls.__insert_methos(query)
 
     @classmethod
     def get_user(cls, user_id: str) -> tuple:
-        query = f'''SELECT user_id, state
+        query = f'''SELECT user_id, is_active
                     FROM users WHERE user_id = {user_id};'''
         return cls.__select_method(query)
 
@@ -51,7 +51,7 @@ class SqlConnector:
         return cls.__select_method(query)
 
     @classmethod
-    def set_user_state(cls, user_id: int, state: bool):
-        query = f'''UPDATE users SET state = {state}
+    def set_user_active(cls, user_id: int, is_active: bool):
+        query = f'''UPDATE users SET is_active = {is_active}
                     WHERE user_id = {user_id};'''
         cls.__insert_methos(query)

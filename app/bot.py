@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 
@@ -14,36 +15,29 @@ from utils import get_apply
 
 
 async def send_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message_counter = [0]
-    user_id = update.callback_query.from_user.id
+    message_counter = 0
+    admin_id = update.callback_query.from_user.id
     bot = context.bot
     query = update.callback_query.data
-    customers = SqlConnector.get_users_id()
-    customers = list(customers).remove(user_id)
-    text_message = query.split('__')[1]
-    if customers:
-        for cust_id in customers:
-            try:
-                await bot.send_message(cust_id, text=text_message)
-                message_counter[0] += 1
-                SqlConnector.set_user_state(user_id, True)
-            except error.BadRequest:
-                SqlConnector.set_user_state(user_id, False)
-    admin_message = f'{message_counter[0]} {GOT_MESSAGE}'
-    await bot.send_message(user_id, text=admin_message)
+    users_ids = list(SqlConnector.get_users_id())
+    users_ids.remove(admin_id)
+    text_message = json.loads(query)['message']
+    for user_id in users_ids:
+        try:
+            await bot.send_message(user_id, text=text_message)
+            message_counter += 1
+            SqlConnector.set_user_active(admin_id, True)
+        except error.BadRequest:
+            SqlConnector.set_user_active(admin_id, False)
+    admin_message = f'{message_counter} {GOT_MESSAGE}'
+    await bot.send_message(admin_id, text=admin_message)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-    await update.effective_chat.send_message(HELLO_TEXT)
-    await main_menu(update, context)
     user = SqlConnector.get_user(user_id)
     if not user:
         SqlConnector.insert_user_id(user_id)
-
-
-async def main_menu(update: Update,
-                    context: ContextTypes.DEFAULT_TYPE) -> None:
     buttons = [
         [
             KeyboardButton(BUTTONS['about']),
@@ -57,7 +51,7 @@ async def main_menu(update: Update,
     if chat_id in ADMIN_IDS:
         buttons.append([KeyboardButton(BUTTONS['send_message'])])
     keyboard_markup = ReplyKeyboardMarkup(buttons)
-    await context.bot.send_message(chat_id=chat_id, text='Choose one:',
+    await context.bot.send_message(chat_id=chat_id, text=HELLO_TEXT,
                                    reply_markup=keyboard_markup)
 
 
@@ -92,12 +86,12 @@ async def send_photo():
 async def any_message(update: Update,
                       context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-    dialog_flag = SqlConnector.get_user(user_id)
+    dialog_state = SqlConnector.get_user(user_id)[0]
     if context.chat_data.get(user_id) and user_id in ADMIN_IDS:
         if context.chat_data[user_id] == "send_message":
             context.chat_data[user_id] = update.message.text
             await get_apply(update, context, MESSAGE_QUESTION_TEXT)
-            SqlConnector.set_user_state(user_id, True)
+            SqlConnector.set_user_active(user_id, True)
     if update.message.text == BUTTONS['about']:
         await about(update, context)
     elif update.message.text == BUTTONS['menu']:
@@ -108,18 +102,18 @@ async def any_message(update: Update,
         if user_id in ADMIN_IDS:
             context.chat_data[user_id] = "send_message"
             await context.bot.send_message(user_id, WRITE_MESSAGE)
-            SqlConnector.set_user_state(user_id, True)
-    if not dialog_flag:
+            SqlConnector.set_user_active(user_id, True)
+    if not dialog_state:
         context.chat_data[user_id] = {}
 
 
 async def handle_callback_query(update: Update,
                                 context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query.data.split("__")[0]
+    action = json.loads(update.callback_query.data)['action']
     chat_id = update.callback_query.message.chat.id
-    if query == "send":
+    if action == 'send':
         await send_messages(update, context)
-    elif query == "delete":
+    elif action == 'delete':
         message_id = update.callback_query.message.message_id
         await context.bot.delete_message(chat_id, message_id)
 

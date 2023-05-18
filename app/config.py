@@ -20,7 +20,7 @@ PHOTO_CHANNEL_ID = -1916305987
 
 MUSIC_CHANNEL_ID = -1904676592
 
-HELLO_TEXT = 'Hello'
+HELLO_TEXT = 'Hello\nChoose one:'
 
 AGENDA_TEXT = 'Agenda'
 
@@ -61,7 +61,9 @@ DATABASE_NAME = 'fyst_fest.db'
 
 SCRIPT_FILE_NAME = "CREATE_TABLE_users.sql"
 
-SCRIPT_FILE = os.path.join(BASE_DIR, SCRIPT_FILE_NAME)
+SCRIPT_FILE = os.path.join(BASE_DIR, "migrations")
+
+SCRIPT_FILE = os.path.join(SCRIPT_FILE, SCRIPT_FILE_NAME)
 
 FYST_FEST_DB = os.path.join(BASE_DIR, DATABASE_NAME)
 
