@@ -86,11 +86,10 @@ async def any_message(update: Update,
             if context.chat_data[user_id] == 'send_message' and (user_id in
                                                                  ADMIN_IDS):
                 await get_apply(update, context, MESSAGE_QUESTION_TEXT,
-                                ['send_messages', 'delete'])
-            elif context.chat_data.get(user_id):
-                if context.chat_data[user_id] == 'request_song':
-                    await get_apply(update, context, REQUEST_SONG_TEXT,
-                                    ['request_song', 'delete'])
+                                {'Send': 'send_messages', 'Delete': 'delete'})
+            elif context.chat_data[user_id] == 'request_song':
+                await get_apply(update, context, REQUEST_SONG_TEXT,
+                                {'Send': 'request_song', 'Delete': 'delete'})
         except error.BadRequest:
             await update.message.reply_text("Try again")
 

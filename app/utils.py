@@ -10,16 +10,15 @@ async def forward_message(message, channel_id):
 
 
 async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE,
-                    question_text: str, action: list):
+                    question_text: str, actions: dict):
     user_id = update.message.from_user.id
-    print(user_id)
     users_text = update.message.text
     call = {
-            'action': action[0],
+            'action': actions['Send'],
             'message': users_text
             }
     call_del = {
-                'action': action[1],
+                'action': actions["Delete"],
                 }
     call = json.dumps(call)
     call_del = json.dumps(call_del)
