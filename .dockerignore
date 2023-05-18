@@ -1,0 +1,6 @@
+venv/
+.env
+env_file.env
+__pycache__/
+.vscode/
+app/fyst_fest.db
