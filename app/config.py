@@ -61,9 +61,7 @@ DATABASE_NAME = 'fyst_fest.db'
 
 SCRIPT_FILE_NAME = "CREATE_TABLE_users.sql"
 
-SCRIPT_FILE = os.path.join(BASE_DIR, "migrations")
-
-SCRIPT_FILE = os.path.join(SCRIPT_FILE, SCRIPT_FILE_NAME)
+SCRIPT_FILE = os.path.join(BASE_DIR, "migrations", SCRIPT_FILE_NAME)
 
 FYST_FEST_DB = os.path.join(BASE_DIR, DATABASE_NAME)
 

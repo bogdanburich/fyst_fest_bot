@@ -46,11 +46,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         [KeyboardButton(BUTTONS['request_song'])],
         [KeyboardButton(BUTTONS['send_photo'])],
     ]
-    chat_id = update.message.from_user.id
-    if chat_id in ADMIN_IDS:
+    user_id = update.message.from_user.id
+    if user_id in ADMIN_IDS:
         buttons.append([KeyboardButton(BUTTONS['send_message'])])
     keyboard_markup = ReplyKeyboardMarkup(buttons)
-    await context.bot.send_message(chat_id=chat_id, text=HELLO_TEXT,
+    await context.bot.send_message(chat_id=user_id, text=HELLO_TEXT,
                                    reply_markup=keyboard_markup)
 
 
