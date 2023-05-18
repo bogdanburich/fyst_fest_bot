@@ -4,8 +4,8 @@ import sys
 
 from config import (ABOUT_TEXT, ADMIN_IDS, AGENDA_TEXT, BOT_TOKEN, BUTTONS,
                     FYST_FEST_DB, GOT_MESSAGE, HELLO_TEXT, MENU_FILE,
-                    MENU_MESSAGE, MESSAGE_QUESTION_TEXT, SCRIPT_FILE,
-                    WRITE_MESSAGE)
+                    MENU_MESSAGE, MESSAGE_QUESTION_TEXT, MUSIC_CHANNEL_ID,
+                    REQUEST_SONG_TEXT, SCRIPT_FILE, WRITE_MESSAGE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update, error
@@ -74,10 +74,6 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pass
 
 
-async def request_song():
-    pass
-
-
 async def send_photo():
     pass
 
@@ -85,10 +81,19 @@ async def send_photo():
 async def any_message(update: Update,
                       context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-    if context.chat_data.get(user_id) and user_id in ADMIN_IDS:
-        if context.chat_data[user_id] == "send_message":
-            context.chat_data[user_id] = update.message.text
-            await get_apply(update, context, MESSAGE_QUESTION_TEXT)
+    if context.chat_data.get(user_id):
+        try:
+            if context.chat_data[user_id] == 'send_message' and (user_id in
+                                                                 ADMIN_IDS):
+                await get_apply(update, context, MESSAGE_QUESTION_TEXT,
+                                ['send_messages', 'delete'])
+            elif context.chat_data.get(user_id):
+                if context.chat_data[user_id] == 'request_song':
+                    await get_apply(update, context, REQUEST_SONG_TEXT,
+                                    ['request_song', 'delete'])
+        except error.BadRequest:
+            await update.message.reply_text("Try again")
+
     if update.message.text == BUTTONS['about']:
         await about(update, context)
     elif update.message.text == BUTTONS['menu']:
@@ -97,19 +102,28 @@ async def any_message(update: Update,
         await agenda(update, context)
     elif update.message.text == BUTTONS['send_message']:
         if user_id in ADMIN_IDS:
-            context.chat_data[user_id] = "send_message"
+            context.chat_data[user_id] = 'send_message'
             await context.bot.send_message(user_id, WRITE_MESSAGE)
+    elif update.message.text == BUTTONS['request_song']:
+        context.chat_data[user_id] = 'request_song'
+        await context.bot.send_message(user_id, REQUEST_SONG_TEXT)
 
 
 async def handle_callback_query(update: Update,
                                 context: ContextTypes.DEFAULT_TYPE):
     action = json.loads(update.callback_query.data)['action']
     chat_id = update.callback_query.message.chat.id
-    if action == 'send':
+    if action == 'send_messages':
         await send_messages(update, context)
     elif action == 'delete':
         message_id = update.callback_query.message.message_id
         await context.bot.delete_message(chat_id, message_id)
+    elif action == 'request_song':
+        song = json.loads(update.callback_query.data)['message']
+        user_name = update.callback_query.from_user.username
+        request_message = f'{user_name} request song:\n{song}'
+        await context.bot.send_message(chat_id=MUSIC_CHANNEL_ID,
+                                       text=request_message)
 
 
 def check_creds() -> bool:

@@ -53,7 +53,7 @@ SEND_TEXT = '✅ Send'
 
 DELETE_TEXT = '❌ Delete'
 
-SEND_QUESTION = 'Send message?:\n'
+SEND_QUESTION = 'Send message?:'
 
 GOT_MESSAGE = 'people got message'
 
@@ -65,4 +65,6 @@ SCRIPT_FILE = os.path.join(BASE_DIR, "migrations", SCRIPT_FILE_NAME)
 
 FYST_FEST_DB = os.path.join(BASE_DIR, DATABASE_NAME)
 
-MESSAGE_QUESTION_TEXT = "Send message?\n"
+MESSAGE_QUESTION_TEXT = "Send message?"
+
+REQUEST_SONG_TEXT = "Write your song:"

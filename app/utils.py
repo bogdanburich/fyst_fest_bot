@@ -10,17 +10,16 @@ async def forward_message(message, channel_id):
 
 
 async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE,
-                    question_text: str):
+                    question_text: str, action: list):
     user_id = update.message.from_user.id
-    message_text = context.chat_data[user_id]
-
+    print(user_id)
+    users_text = update.message.text
     call = {
-            'action': 'send',
-            'message': message_text
+            'action': action[0],
+            'message': users_text
             }
     call_del = {
-                'action': 'delete',
-                'message': message_text
+                'action': action[1],
                 }
     call = json.dumps(call)
     call_del = json.dumps(call_del)
@@ -29,5 +28,6 @@ async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE,
         call_del))
     keyboard = InlineKeyboardMarkup([[callback_button_send,
                                     callback_button_delete]])
-    message = f'{question_text}{message_text}'
+    message = f'{question_text}\n{users_text}'
     await update.message.reply_text(message, reply_markup=keyboard)
+    context.chat_data[user_id] = ''
