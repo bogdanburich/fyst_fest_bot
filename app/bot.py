@@ -85,7 +85,6 @@ async def send_photo():
 async def any_message(update: Update,
                       context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-    dialog_state = SqlConnector.get_user(user_id)[0]
     if context.chat_data.get(user_id) and user_id in ADMIN_IDS:
         if context.chat_data[user_id] == "send_message":
             context.chat_data[user_id] = update.message.text
@@ -100,8 +99,6 @@ async def any_message(update: Update,
         if user_id in ADMIN_IDS:
             context.chat_data[user_id] = "send_message"
             await context.bot.send_message(user_id, WRITE_MESSAGE)
-    if not dialog_state:
-        context.chat_data[user_id] = {}
 
 
 async def handle_callback_query(update: Update,
