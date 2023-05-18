@@ -35,13 +35,12 @@ class SqlConnector:
 
     @classmethod
     def insert_user_id(cls, user_id: int, state: str = "") -> None:
-        print(user_id)
         query = f'''INSERT INTO users(user_id, state)
                  VALUES({user_id}, '{state}');'''
         cls.__insert_methos(query)
 
     @classmethod
-    def get_user_id(cls, user_id: str) -> tuple:
+    def get_user(cls, user_id: str) -> tuple:
         query = f'''SELECT user_id, state
                     FROM users WHERE user_id = {user_id};'''
         return cls.__select_method(query)

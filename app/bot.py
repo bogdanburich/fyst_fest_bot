@@ -37,7 +37,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
     await update.effective_chat.send_message(HELLO_TEXT)
     await main_menu(update, context)
-    user = SqlConnector.get_user_id(user_id)
+    user = SqlConnector.get_user(user_id)
     if not user:
         SqlConnector.insert_user_id(user_id)
 
@@ -91,13 +91,13 @@ async def send_photo():
 
 async def any_message(update: Update,
                       context: ContextTypes.DEFAULT_TYPE) -> None:
-    dialog_flag = False
     user_id = update.message.from_user.id
+    dialog_flag = SqlConnector.get_user(user_id)
     if context.chat_data.get(user_id) and user_id in ADMIN_IDS:
         if context.chat_data[user_id] == "send_message":
             context.chat_data[user_id] = update.message.text
             await get_apply(update, context, MESSAGE_QUESTION_TEXT)
-            dialog_flag = True
+            SqlConnector.set_user_state(user_id, True)
     if update.message.text == BUTTONS['about']:
         await about(update, context)
     elif update.message.text == BUTTONS['menu']:
@@ -108,7 +108,7 @@ async def any_message(update: Update,
         if user_id in ADMIN_IDS:
             context.chat_data[user_id] = "send_message"
             await context.bot.send_message(user_id, WRITE_MESSAGE)
-            dialog_flag = True
+            SqlConnector.set_user_state(user_id, True)
     if not dialog_flag:
         context.chat_data[user_id] = {}
 
