@@ -19,7 +19,7 @@ async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_id = update.message.id
     message = update.message.text
 
-    send = json.dumps({'action': 'send_messages', 'message_id': message_id})
+    send = json.dumps({'action': 'send', 'message_id': message_id})
     delete = json.dumps({'action': 'delete'})
 
     button_send = InlineKeyboardButton('✅ Send', callback_data=send)
@@ -161,7 +161,7 @@ async def callback_handler(update: Update,
     message_id = update.callback_query.message.message_id
 
     action = json.loads(update.callback_query.data)['action']
-    if action == 'send_messages':
+    if action == 'send':
         await send_everyone(update, context)
     elif action == 'delete':
         await context.bot.delete_message(chat_id, message_id)
