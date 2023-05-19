@@ -49,7 +49,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         [KeyboardButton(BUTTONS['request_song'])],
         [KeyboardButton(BUTTONS['send_photo'])],
     ]
-    user_id = update.message.from_user.id
     if user_id in ADMIN_IDS:
         buttons.append([KeyboardButton(BUTTONS['send_message'])])
     keyboard_markup = ReplyKeyboardMarkup(buttons)
@@ -82,9 +81,9 @@ async def send_photo():
 
 
 async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message_text = update.message.text
+    message = update.message.text
     user_id = update.message.from_user.id
-    if len(message_text) >= MAX_SONG_LENGTH:
+    if len(message) >= MAX_SONG_LENGTH:
         await context.bot.send_message(chat_id=user_id,
                                        text=ERRORS['name_too_long'])
         return
@@ -94,7 +93,7 @@ async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                       message_id=message_id)
     await context.bot.send_message(chat_id=user_id,
                                    text=REQUESTED_SONG)
-    context.chat_data[user_id] = ''
+    del context.chat_data[user_id]
 
 
 async def any_message(update: Update,

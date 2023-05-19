@@ -30,4 +30,4 @@ async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE,
                                     callback_button_delete]])
     message = f'{question_text}\n{users_text}'
     await update.message.reply_text(message, reply_markup=keyboard)
-    context.chat_data[user_id] = ''
+    del context.chat_data[user_id]
