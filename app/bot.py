@@ -22,10 +22,12 @@ async def send_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query.data
     users_ids = list(SqlConnector.get_users_id())
     users_ids.remove(admin_id)
-    text_message = json.loads(query)['message']
+    message_id = json.loads(query)['message_id']
     for user_id in users_ids:
         try:
-            await bot.send_message(user_id, text=text_message)
+            await bot.forward_message(chat_id=user_id,
+                                      from_chat_id=admin_id,
+                                      message_id=message_id)
             message_counter += 1
         except error.BadRequest:
             SqlConnector.set_user_active(admin_id, False)
@@ -103,7 +105,7 @@ async def any_message(update: Update,
         if context.chat_data[user_id] == 'send_message' and (user_id in
                                                              ADMIN_IDS):
             await get_apply(update, context, MESSAGE_QUESTION_TEXT,
-                            send_action='send_message',
+                            send_action='send_messages',
                             delete_action='delete')
         elif context.chat_data[user_id] == 'request_song':
             await request_song(update, context)
