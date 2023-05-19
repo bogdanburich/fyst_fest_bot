@@ -71,4 +71,6 @@ REQUEST_SONG_TEXT = 'Write your song:'
 
 REQUESTED_SONG = 'Song has been requested'
 
-VALIDATION_TEXT = 'Name is too long, try again:'
+VALIDATION_TEXT_LEN = 'Name is too long, try again:'
+
+LEN_TEXT_PARAM = 100
