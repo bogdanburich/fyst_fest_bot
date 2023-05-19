@@ -138,7 +138,7 @@ async def handler(update: Update,
     message = update.message.text
 
     if message not in BUTTONS.values() and context.chat_data.get(user_id):
-        context_handler(update=update, context=context, user_id=user_id)
+        await context_handler(update=update, context=context, user_id=user_id)
 
     if update.message.text == BUTTONS['about']:
         await about(update, context)
