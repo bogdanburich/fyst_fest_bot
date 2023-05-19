@@ -10,7 +10,8 @@ BASE_DIR = str(Path(__file__).resolve().parent)
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 ERRORS = {
-}
+    'name_too_long': 'Name is too long, try again:'
+    }
 
 ADMIN_IDS = [
     116553777, 402816936, 295699541
@@ -53,16 +54,22 @@ SEND_TEXT = '✅ Send'
 
 DELETE_TEXT = '❌ Delete'
 
-SEND_QUESTION = 'Send message?:\n'
+SEND_QUESTION = 'Send message?:'
 
 GOT_MESSAGE = 'people got message'
 
 DATABASE_NAME = 'fyst_fest.db'
 
-SCRIPT_FILE_NAME = "CREATE_TABLE_users.sql"
+SCRIPT_FILE_NAME = 'CREATE_TABLE_users.sql'
 
-SCRIPT_FILE = os.path.join(BASE_DIR, "migrations", SCRIPT_FILE_NAME)
+SCRIPT_FILE = os.path.join(BASE_DIR, 'migrations', SCRIPT_FILE_NAME)
 
 FYST_FEST_DB = os.path.join(BASE_DIR, DATABASE_NAME)
 
-MESSAGE_QUESTION_TEXT = "Send message?\n"
+MESSAGE_QUESTION_TEXT = 'Send message?'
+
+REQUEST_SONG_TEXT = 'Write your song:'
+
+REQUESTED_SONG = 'Song has been requested'
+
+MAX_SONG_LENGTH = 100

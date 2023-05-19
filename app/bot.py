@@ -3,9 +3,10 @@ import os
 import sys
 
 from config import (ABOUT_TEXT, ADMIN_IDS, AGENDA_TEXT, BOT_TOKEN, BUTTONS,
-                    FYST_FEST_DB, GOT_MESSAGE, HELLO_TEXT, MENU_FILE,
-                    MENU_MESSAGE, MESSAGE_QUESTION_TEXT, SCRIPT_FILE,
-                    WRITE_MESSAGE)
+                    ERRORS, FYST_FEST_DB, GOT_MESSAGE, HELLO_TEXT,
+                    MAX_SONG_LENGTH, MENU_FILE, MENU_MESSAGE,
+                    MESSAGE_QUESTION_TEXT, MUSIC_CHANNEL_ID, REQUEST_SONG_TEXT,
+                    REQUESTED_SONG, SCRIPT_FILE, WRITE_MESSAGE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update, error
@@ -74,21 +75,39 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pass
 
 
-async def request_song():
-    pass
-
-
 async def send_photo():
     pass
+
+
+async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    message_text = update.message.text
+    user_id = update.message.from_user.id
+    if len(message_text) >= MAX_SONG_LENGTH:
+        await context.bot.send_message(chat_id=user_id,
+                                       text=ERRORS['name_too_long'])
+        return
+    message_id = update.message.id
+    await context.bot.forward_message(chat_id=MUSIC_CHANNEL_ID,
+                                      from_chat_id=user_id,
+                                      message_id=message_id)
+    await context.bot.send_message(chat_id=user_id,
+                                   text=REQUESTED_SONG)
+    context.chat_data[user_id] = ''
 
 
 async def any_message(update: Update,
                       context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-    if context.chat_data.get(user_id) and user_id in ADMIN_IDS:
-        if context.chat_data[user_id] == "send_message":
-            context.chat_data[user_id] = update.message.text
-            await get_apply(update, context, MESSAGE_QUESTION_TEXT)
+    message = update.message.text
+    if message not in BUTTONS.values() and context.chat_data.get(user_id):
+        if context.chat_data[user_id] == 'send_message' and (user_id in
+                                                             ADMIN_IDS):
+            await get_apply(update, context, MESSAGE_QUESTION_TEXT,
+                            send_action='send_message',
+                            delete_action='delete')
+        elif context.chat_data[user_id] == 'request_song':
+            await request_song(update, context)
+
     if update.message.text == BUTTONS['about']:
         await about(update, context)
     elif update.message.text == BUTTONS['menu']:
@@ -97,15 +116,18 @@ async def any_message(update: Update,
         await agenda(update, context)
     elif update.message.text == BUTTONS['send_message']:
         if user_id in ADMIN_IDS:
-            context.chat_data[user_id] = "send_message"
+            context.chat_data[user_id] = 'send_message'
             await context.bot.send_message(user_id, WRITE_MESSAGE)
+    elif update.message.text == BUTTONS['request_song']:
+        context.chat_data[user_id] = 'request_song'
+        await context.bot.send_message(user_id, REQUEST_SONG_TEXT)
 
 
 async def handle_callback_query(update: Update,
                                 context: ContextTypes.DEFAULT_TYPE):
     action = json.loads(update.callback_query.data)['action']
     chat_id = update.callback_query.message.chat.id
-    if action == 'send':
+    if action == 'send_messages':
         await send_messages(update, context)
     elif action == 'delete':
         message_id = update.callback_query.message.message_id
