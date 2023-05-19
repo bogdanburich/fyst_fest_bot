@@ -3,7 +3,7 @@ import os
 import sys
 
 import texts
-from config import (ADMIN_IDS, BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB,
+from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB,
                     MAX_SONG_LENGTH, MENU_FILE, MUSIC_CHANNEL_ID, SCRIPT_FILE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
@@ -19,15 +19,16 @@ async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_id = update.message.id
     message = update.message.text
 
-    call = json.dumps({'action': 'send_messages', 'message_id': message_id})
-    call_del = json.dumps({'action': 'delete'})
+    send = json.dumps({'action': 'send_messages', 'message_id': message_id})
+    delete = json.dumps({'action': 'delete'})
 
-    button_send = InlineKeyboardButton('✅ Send', callback_data=call)
-    button_delete = InlineKeyboardButton('❌ Delete', callback_data=call_del)
+    button_send = InlineKeyboardButton('✅ Send', callback_data=send)
+    button_delete = InlineKeyboardButton('❌ Delete', callback_data=delete)
     keyboard = InlineKeyboardMarkup([[button_send, button_delete]])
 
     apply = f'Send message?\n{message}'
     await update.message.reply_text(apply, reply_markup=keyboard)
+
     del context.chat_data[user_id]
 
 
@@ -55,6 +56,7 @@ async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
+
     user = SqlConnector.get_user(user_id)
     if not user:
         SqlConnector.insert_or_activate_user(user_id)
@@ -68,8 +70,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         [KeyboardButton(BUTTONS['request_song'])],
         [KeyboardButton(BUTTONS['send_photo'])],
     ]
-    if user_id in ADMIN_IDS:
+
+    if is_admin(user_id):
         buttons.append([KeyboardButton(BUTTONS['send_message'])])
+
     keyboard_markup = ReplyKeyboardMarkup(buttons)
 
     await context.bot.send_message(chat_id=user_id, text=texts.HELLO,
@@ -116,6 +120,7 @@ async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                       message_id=message_id)
     await context.bot.send_message(chat_id=user_id,
                                    text='Song has been requested')
+
     del context.chat_data[user_id]
 
 
