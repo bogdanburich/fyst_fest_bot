@@ -3,19 +3,38 @@ import os
 import sys
 
 from config import (ABOUT_TEXT, ADMIN_IDS, AGENDA_TEXT, BOT_TOKEN, BUTTONS,
-                    ERRORS, FYST_FEST_DB, GOT_MESSAGE, HELLO_TEXT,
+                    DELETE_TEXT, ERRORS, FYST_FEST_DB, GOT_MESSAGE, HELLO_TEXT,
                     MAX_SONG_LENGTH, MENU_FILE, MENU_MESSAGE,
                     MESSAGE_QUESTION_TEXT, MUSIC_CHANNEL_ID, REQUEST_SONG_TEXT,
-                    REQUESTED_SONG, SCRIPT_FILE, WRITE_MESSAGE)
+                    REQUESTED_SONG, SCRIPT_FILE, SEND_TEXT, WRITE_MESSAGE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
-from telegram import KeyboardButton, ReplyKeyboardMarkup, Update, error
+from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
+                      KeyboardButton, ReplyKeyboardMarkup, Update, error)
 from telegram.ext import (Application, CallbackQueryHandler, CommandHandler,
                           ContextTypes, MessageHandler)
-from utils import get_apply
+from utils import is_admin
 
 
-async def send_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.message.from_user.id
+    message_id = update.message.id
+    users_text = update.message.text
+    call = {'action': 'send_messages', 'message_id': message_id}
+    call_del = {'action': 'delete'}
+    call = json.dumps(call)
+    call_del = json.dumps(call_del)
+    callback_button_send = InlineKeyboardButton(SEND_TEXT, callback_data=call)
+    callback_button_delete = InlineKeyboardButton(DELETE_TEXT,
+                                                  callback_data=call_del)
+    keyboard = InlineKeyboardMarkup([[callback_button_send,
+                                      callback_button_delete]])
+    message = f'{MESSAGE_QUESTION_TEXT}\n{users_text}'
+    await update.message.reply_text(message, reply_markup=keyboard)
+    del context.chat_data[user_id]
+
+
+async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_counter = 0
     admin_id = update.callback_query.from_user.id
     bot = context.bot
@@ -96,18 +115,21 @@ async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
     del context.chat_data[user_id]
 
 
-async def any_message(update: Update,
-                      context: ContextTypes.DEFAULT_TYPE) -> None:
+async def context_handler(update: Update, context: ContextTypes.DEFAULT_TYPE,
+                          user_id: int):
+    if context.chat_data[user_id] == 'send_message' and is_admin(user_id):
+        await get_apply(update, context)
+    elif context.chat_data[user_id] == 'request_song':
+        await request_song(update, context)
+
+
+async def handler(update: Update,
+                  context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
     message = update.message.text
+
     if message not in BUTTONS.values() and context.chat_data.get(user_id):
-        if context.chat_data[user_id] == 'send_message' and (user_id in
-                                                             ADMIN_IDS):
-            await get_apply(update, context, MESSAGE_QUESTION_TEXT,
-                            send_action='send_messages',
-                            delete_action='delete')
-        elif context.chat_data[user_id] == 'request_song':
-            await request_song(update, context)
+        context_handler(update=update, context=context, user_id=user_id)
 
     if update.message.text == BUTTONS['about']:
         await about(update, context)
@@ -116,7 +138,7 @@ async def any_message(update: Update,
     elif update.message.text == BUTTONS['agenda']:
         await agenda(update, context)
     elif update.message.text == BUTTONS['send_message']:
-        if user_id in ADMIN_IDS:
+        if is_admin(user_id):
             context.chat_data[user_id] = 'send_message'
             await context.bot.send_message(user_id, WRITE_MESSAGE)
     elif update.message.text == BUTTONS['request_song']:
@@ -124,12 +146,12 @@ async def any_message(update: Update,
         await context.bot.send_message(user_id, REQUEST_SONG_TEXT)
 
 
-async def handle_callback_query(update: Update,
-                                context: ContextTypes.DEFAULT_TYPE):
+async def callback_handler(update: Update,
+                           context: ContextTypes.DEFAULT_TYPE):
     action = json.loads(update.callback_query.data)['action']
     chat_id = update.callback_query.message.chat.id
     if action == 'send_messages':
-        await send_messages(update, context)
+        await send_everyone(update, context)
     elif action == 'delete':
         message_id = update.callback_query.message.message_id
         await context.bot.delete_message(chat_id, message_id)
@@ -150,9 +172,9 @@ def main():
 
     application = Application.builder().token(BOT_TOKEN).build()
 
-    application.add_handler(MessageHandler(BASE_MESSAGE_FILTERS, any_message))
+    application.add_handler(MessageHandler(BASE_MESSAGE_FILTERS, handler))
     application.add_handler(CommandHandler('start', start))
-    application.add_handler(CallbackQueryHandler(handle_callback_query))
+    application.add_handler(CallbackQueryHandler(callback_handler))
 
     application.run_polling()
 
