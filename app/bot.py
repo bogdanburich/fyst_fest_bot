@@ -18,19 +18,19 @@ from utils import get_apply
 async def send_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_counter = 0
     admin_id = update.callback_query.from_user.id
-    bot = context.bot
-    query = update.callback_query.data
+    message_id = json.loads(update.callback_query.data)['message_id']
     users_ids = list(SqlConnector.get_users_id())
     users_ids.remove(admin_id)
-    text_message = json.loads(query)['message']
     for user_id in users_ids:
         try:
-            await bot.send_message(user_id, text=text_message)
+            await context.bot.forward_message(chat_id=user_id,
+                                              from_chat_id=admin_id,
+                                              message_id=message_id)
             message_counter += 1
         except error.BadRequest:
             SqlConnector.set_user_active(admin_id, False)
     admin_message = f'{message_counter} {GOT_MESSAGE}'
-    await bot.send_message(admin_id, text=admin_message)
+    await context.bot.send_message(admin_id, text=admin_message)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -127,7 +127,7 @@ async def handle_callback_query(update: Update,
                                 context: ContextTypes.DEFAULT_TYPE):
     action = json.loads(update.callback_query.data)['action']
     chat_id = update.callback_query.message.chat.id
-    if action == 'send_messages':
+    if action == 'send_message':
         await send_messages(update, context)
     elif action == 'delete':
         message_id = update.callback_query.message.message_id
