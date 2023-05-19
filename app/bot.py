@@ -92,7 +92,7 @@ async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                       message_id=message_id)
     await context.bot.send_message(chat_id=user_id,
                                    text=REQUESTED_SONG)
-    context.chat_data[user_id] = ""
+    context.chat_data[user_id] = ''
 
 
 async def any_message(update: Update,
