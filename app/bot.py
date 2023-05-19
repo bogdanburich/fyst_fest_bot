@@ -3,8 +3,8 @@ import os
 import sys
 
 import texts
-from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB,
-                    MAX_SONG_LENGTH, MENU_FILE, MUSIC_CHANNEL_ID, SCRIPT_FILE)
+from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB, MAX_SONG_LENGTH,
+                    MENU_FILE, MUSIC_CHANNEL_ID, SCRIPT_FILE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
@@ -101,8 +101,16 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pass
 
 
-async def send_photo():
-    pass
+async def send_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    message_id = update.message.id
+    user_id = update.message.from_user.id
+    if not update.message.photo:
+        await context.bot.send_message(user_id, 'It is not photo...')
+        del context.chat_data[user_id]
+        return
+    await context.bot.forward_message(chat_id=user_id,
+                                      from_chat_id=user_id,
+                                      message_id=message_id)
 
 
 async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -130,6 +138,8 @@ async def context_handler(update: Update, context: ContextTypes.DEFAULT_TYPE,
         await get_apply(update, context)
     elif context.chat_data[user_id] == 'request_song':
         await request_song(update, context)
+    elif context.chat_data[user_id] == 'send_photo':
+        await send_photo(update, context)
 
 
 async def handler(update: Update,
@@ -138,7 +148,7 @@ async def handler(update: Update,
     message = update.message.text
 
     if message not in BUTTONS.values() and context.chat_data.get(user_id):
-        context_handler(update=update, context=context, user_id=user_id)
+        await context_handler(update=update, context=context, user_id=user_id)
 
     if update.message.text == BUTTONS['about']:
         await about(update, context)
@@ -153,6 +163,9 @@ async def handler(update: Update,
     elif update.message.text == BUTTONS['request_song']:
         context.chat_data[user_id] = 'request_song'
         await context.bot.send_message(user_id, 'Write your song:')
+    elif update.message.text == BUTTONS['send_photo']:
+        context.chat_data[user_id] = 'send_photo'
+        await context.bot.send_message(user_id, "Send your photo:")
 
 
 async def callback_handler(update: Update,
