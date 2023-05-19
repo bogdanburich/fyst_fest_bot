@@ -59,12 +59,14 @@ GOT_MESSAGE = 'people got message'
 
 DATABASE_NAME = 'fyst_fest.db'
 
-SCRIPT_FILE_NAME = "CREATE_TABLE_users.sql"
+SCRIPT_FILE_NAME = 'CREATE_TABLE_users.sql'
 
-SCRIPT_FILE = os.path.join(BASE_DIR, "migrations", SCRIPT_FILE_NAME)
+SCRIPT_FILE = os.path.join(BASE_DIR, 'migrations', SCRIPT_FILE_NAME)
 
 FYST_FEST_DB = os.path.join(BASE_DIR, DATABASE_NAME)
 
-MESSAGE_QUESTION_TEXT = "Send message?"
+MESSAGE_QUESTION_TEXT = 'Send message?'
 
-REQUEST_SONG_TEXT = "Write your song:"
+REQUEST_SONG_TEXT = 'Write your song:'
+
+REQUESTED_SONG = 'Song has been requested'
