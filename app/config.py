@@ -10,7 +10,8 @@ BASE_DIR = str(Path(__file__).resolve().parent)
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 ERRORS = {
-}
+    'name_too_long': 'Name is too long, try again:'
+    }
 
 ADMIN_IDS = [
     116553777, 402816936, 295699541
@@ -71,6 +72,4 @@ REQUEST_SONG_TEXT = 'Write your song:'
 
 REQUESTED_SONG = 'Song has been requested'
 
-VALIDATION_TEXT_LEN = 'Name is too long, try again:'
-
-LEN_TEXT_PARAM = 100
+MAX_SONG_LENGTH = 100
