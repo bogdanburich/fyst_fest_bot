@@ -80,31 +80,27 @@ async def send_photo():
 
 
 async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message_id = json.loads(update.callback_query.data)['message_id']
-    user_id = update.callback_query.from_user.id
-    await context.bot.forward_message(chat_id=user_id,
+    message_id = update.message.id
+    user_id = update.message.from_user.id
+    await context.bot.forward_message(chat_id=MUSIC_CHANNEL_ID,
                                       from_chat_id=user_id,
                                       message_id=message_id)
-    await context.bot.send_message(chat_id=MUSIC_CHANNEL_ID,
+    await context.bot.send_message(chat_id=user_id,
                                    text=REQUESTED_SONG)
 
 
 async def any_message(update: Update,
                       context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-    if context.chat_data.get(user_id):
-        try:
-            if context.chat_data[user_id] == 'send_message' and (user_id in
-                                                                 ADMIN_IDS):
-                await get_apply(update, context, MESSAGE_QUESTION_TEXT,
-                                send_action='send_message',
-                                delete_action='delete')
-            elif context.chat_data[user_id] == 'request_song':
-                await get_apply(update, context, MESSAGE_QUESTION_TEXT,
-                                send_action='request_song',
-                                delete_action='delete')
-        except error.BadRequest:
-            await update.message.reply_text('Try again')
+    message = update.message.text
+    if message not in BUTTONS.values() and context.chat_data.get(user_id):
+        if context.chat_data[user_id] == 'send_message' and (user_id in
+                                                             ADMIN_IDS):
+            await get_apply(update, context, MESSAGE_QUESTION_TEXT,
+                            send_action='send_message',
+                            delete_action='delete')
+        elif context.chat_data[user_id] == 'request_song':
+            await request_song(update, context)
 
     if update.message.text == BUTTONS['about']:
         await about(update, context)
@@ -130,8 +126,6 @@ async def handle_callback_query(update: Update,
     elif action == 'delete':
         message_id = update.callback_query.message.message_id
         await context.bot.delete_message(chat_id, message_id)
-    elif action == 'request_song':
-        await request_song(update, context)
 
 
 def check_creds() -> bool:
