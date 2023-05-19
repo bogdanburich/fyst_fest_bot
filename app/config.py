@@ -70,3 +70,5 @@ MESSAGE_QUESTION_TEXT = 'Send message?'
 REQUEST_SONG_TEXT = 'Write your song:'
 
 REQUESTED_SONG = 'Song has been requested'
+
+VALIDATION_TEXT = 'Name is too long, try again:'

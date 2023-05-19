@@ -6,7 +6,7 @@ from config import (ABOUT_TEXT, ADMIN_IDS, AGENDA_TEXT, BOT_TOKEN, BUTTONS,
                     FYST_FEST_DB, GOT_MESSAGE, HELLO_TEXT, MENU_FILE,
                     MENU_MESSAGE, MESSAGE_QUESTION_TEXT, MUSIC_CHANNEL_ID,
                     REQUEST_SONG_TEXT, REQUESTED_SONG, SCRIPT_FILE,
-                    WRITE_MESSAGE)
+                    VALIDATION_TEXT, WRITE_MESSAGE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update, error
@@ -80,13 +80,18 @@ async def send_photo():
 
 
 async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    message_id = update.message.id
+    message_text = update.message.text
     user_id = update.message.from_user.id
+    if len(message_text) >= 100:
+        await context.bot.send_message(chat_id=user_id, text=VALIDATION_TEXT)
+        return
+    message_id = update.message.id
     await context.bot.forward_message(chat_id=MUSIC_CHANNEL_ID,
                                       from_chat_id=user_id,
                                       message_id=message_id)
     await context.bot.send_message(chat_id=user_id,
                                    text=REQUESTED_SONG)
+    context.chat_data[user_id] = ""
 
 
 async def any_message(update: Update,
