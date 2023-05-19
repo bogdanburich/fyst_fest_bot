@@ -4,7 +4,7 @@ import sys
 
 import texts
 from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB, MAX_SONG_LENGTH,
-                    MENU_FILE, MUSIC_CHANNEL_ID, SCRIPT_FILE)
+                    MENU_FILE, MUSIC_CHANNEL_ID, PHOTO_CHANNEL_ID, SCRIPT_FILE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
@@ -108,7 +108,7 @@ async def send_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(user_id, 'It is not photo...')
         del context.chat_data[user_id]
         return
-    await context.bot.forward_message(chat_id=user_id,
+    await context.bot.forward_message(chat_id=PHOTO_CHANNEL_ID,
                                       from_chat_id=user_id,
                                       message_id=message_id)
 
