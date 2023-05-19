@@ -21,10 +21,6 @@ PHOTO_CHANNEL_ID = -1001916305987
 
 MUSIC_CHANNEL_ID = -1001904676592
 
-HELLO_TEXT = 'Hello\nChoose one:'
-
-AGENDA_TEXT = 'Agenda'
-
 MENU_FILE = os.path.join(BASE_DIR, 'static/menu.pdf')
 
 BUTTONS = {
@@ -36,28 +32,6 @@ BUTTONS = {
     'send_message': '📝 Send message'
 }
 
-ABOUT_TEXT = '''
-🔖 Agenda - Get a program for today
-
-🍕 Menu - Get the menu
-
-🎵 Request Song - Order music
-
-📷 Send Photo - Send a photo
-'''
-
-MENU_MESSAGE = 'One moment...'
-
-WRITE_MESSAGE = 'Write your message...'
-
-SEND_TEXT = '✅ Send'
-
-DELETE_TEXT = '❌ Delete'
-
-SEND_QUESTION = 'Send message?:'
-
-GOT_MESSAGE = 'people got message'
-
 DATABASE_NAME = 'fyst_fest.db'
 
 SCRIPT_FILE_NAME = 'CREATE_TABLE_users.sql'
@@ -65,11 +39,5 @@ SCRIPT_FILE_NAME = 'CREATE_TABLE_users.sql'
 SCRIPT_FILE = os.path.join(BASE_DIR, 'migrations', SCRIPT_FILE_NAME)
 
 FYST_FEST_DB = os.path.join(BASE_DIR, DATABASE_NAME)
-
-MESSAGE_QUESTION_TEXT = 'Send message?'
-
-REQUEST_SONG_TEXT = 'Write your song:'
-
-REQUESTED_SONG = 'Song has been requested'
 
 MAX_SONG_LENGTH = 100
