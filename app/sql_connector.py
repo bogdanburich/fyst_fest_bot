@@ -19,7 +19,7 @@ class SqlConnector:
             cursor = conn.cursor()
             try:
                 cursor.execute(query)
-                return cursor.fetchall()[0]
+                return cursor.fetchall()
             finally:
                 cursor.close()
 
@@ -50,7 +50,7 @@ class SqlConnector:
     @classmethod
     def get_users_id(cls) -> tuple:
         query = '''SELECT user_id FROM users WHERE is_active = 1;'''
-        return cls.__select_method(query)
+        return cls.__select_method(query)[0]
 
     @classmethod
     def set_user_active(cls, user_id: int, is_active: bool):
