@@ -3,8 +3,8 @@ import os
 import sys
 
 import texts
-from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB,
-                    MAX_SONG_LENGTH, MENU_FILE, MUSIC_CHANNEL_ID, SCRIPT_FILE)
+from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB, MAX_SONG_LENGTH,
+                    MENU_FILE, MUSIC_CHANNEL_ID, SCRIPT_FILE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
