@@ -166,7 +166,7 @@ async def handler(update: Update,
         await context.bot.send_message(user_id, 'Write your song:')
     elif update.message.text == BUTTONS.get('send_photo'):
         context.chat_data[user_id] = 'send_photo'
-        await context.bot.send_message(user_id, "Send your photo:")
+        await context.bot.send_message(user_id, 'Send your photo:')
 
 
 async def callback_handler(update: Update,

@@ -27,14 +27,14 @@ class SqlConnector:
     def create_database(cls, data_base: str, script_file: str) -> None:
         with sqlite3.connect(data_base) as conn:
             cursor = conn.cursor()
-            with open(script_file, "r") as f:
+            with open(script_file, 'r') as f:
                 script = f.read()
                 cursor.executescript(script)
                 conn.commit()
                 cursor.close()
 
     @classmethod
-    def insert_or_activate_user(cls, user_id: int, is_active: str = ""
+    def insert_or_activate_user(cls, user_id: int, is_active: str = ''
                                 ) -> None:
         query = f'''INSERT INTO users(user_id)
                  VALUES({user_id})
