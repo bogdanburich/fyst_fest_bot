@@ -19,7 +19,7 @@ class SqlConnector:
             cursor = conn.cursor()
             try:
                 cursor.execute(query)
-                return cursor.fetchone()
+                return cursor.fetchall()
             finally:
                 cursor.close()
 
@@ -27,14 +27,14 @@ class SqlConnector:
     def create_database(cls, data_base: str, script_file: str) -> None:
         with sqlite3.connect(data_base) as conn:
             cursor = conn.cursor()
-            with open(script_file, "r") as f:
+            with open(script_file, 'r') as f:
                 script = f.read()
                 cursor.executescript(script)
                 conn.commit()
                 cursor.close()
 
     @classmethod
-    def insert_or_activate_user(cls, user_id: int, is_active: str = ""
+    def insert_or_activate_user(cls, user_id: int, is_active: str = ''
                                 ) -> None:
         query = f'''INSERT INTO users(user_id)
                  VALUES({user_id})
@@ -50,7 +50,7 @@ class SqlConnector:
     @classmethod
     def get_users_id(cls) -> tuple:
         query = '''SELECT user_id FROM users WHERE is_active = 1;'''
-        return cls.__select_method(query)
+        return cls.__select_method(query)[0]
 
     @classmethod
     def set_user_active(cls, user_id: int, is_active: bool):

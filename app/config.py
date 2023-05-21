@@ -10,7 +10,8 @@ BASE_DIR = str(Path(__file__).resolve().parent)
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 ERRORS = {
-    'name_too_long': 'Name is too long, try again:'
+    'name_too_long': 'Name is too long, try again:',
+    'not_photo': 'It is not photo...'
     }
 
 ADMIN_IDS = [
