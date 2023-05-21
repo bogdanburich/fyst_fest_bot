@@ -19,7 +19,7 @@ class SqlConnector:
             cursor = conn.cursor()
             try:
                 cursor.execute(query)
-                return cursor.fetchone()
+                return cursor.fetchall()[0]
             finally:
                 cursor.close()
 

@@ -105,8 +105,7 @@ async def send_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_id = update.message.id
     user_id = update.message.from_user.id
     if not update.message.photo:
-        await context.bot.send_message(user_id, 'It is not photo...')
-        del context.chat_data[user_id]
+        await context.bot.send_message(user_id, ERRORS['not_photo'])
         return
     await context.bot.forward_message(chat_id=PHOTO_CHANNEL_ID,
                                       from_chat_id=user_id,
@@ -149,21 +148,23 @@ async def handler(update: Update,
 
     if message not in BUTTONS.values() and context.chat_data.get(user_id):
         await context_handler(update=update, context=context, user_id=user_id)
+    elif context.chat_data.get(user_id):
+        del context.chat_data[user_id]
 
-    if update.message.text == BUTTONS['about']:
+    if update.message.text == BUTTONS.get('about'):
         await about(update, context)
-    elif update.message.text == BUTTONS['menu']:
+    elif update.message.text == BUTTONS.get('menu'):
         await menu(update, context)
-    elif update.message.text == BUTTONS['agenda']:
+    elif update.message.text == BUTTONS.get('agenda'):
         await agenda(update, context)
-    elif update.message.text == BUTTONS['send_message']:
+    elif update.message.text == BUTTONS.get('send_message'):
         if is_admin(user_id):
             context.chat_data[user_id] = 'send_message'
             await context.bot.send_message(user_id, 'Write your message...')
-    elif update.message.text == BUTTONS['request_song']:
+    elif update.message.text == BUTTONS.get('request_song'):
         context.chat_data[user_id] = 'request_song'
         await context.bot.send_message(user_id, 'Write your song:')
-    elif update.message.text == BUTTONS['send_photo']:
+    elif update.message.text == BUTTONS.get('send_photo'):
         context.chat_data[user_id] = 'send_photo'
         await context.bot.send_message(user_id, "Send your photo:")
 
