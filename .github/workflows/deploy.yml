@@ -35,6 +35,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            cd fyst_fest_bot
             docker image rm ${{ secrets.DOCKER_USERNAME }}/fyst_fest_bot:latest -f
             docker pull ${{ secrets.DOCKER_USERNAME }}/fyst_fest_bot:latest
             docker-compose stop
