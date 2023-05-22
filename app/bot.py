@@ -17,7 +17,6 @@ from utils import is_admin
 async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.message.from_user.id
     message_id = update.message.id
-    message = update.message.text
 
     send = json.dumps({'action': 'send', 'message_id': message_id})
     delete = json.dumps({'action': 'delete'})
@@ -26,7 +25,7 @@ async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     button_delete = InlineKeyboardButton('❌ Delete', callback_data=delete)
     keyboard = InlineKeyboardMarkup([[button_send, button_delete]])
 
-    apply = f'Send message?\n{message}'
+    apply = 'Send message above?'
     await update.message.reply_text(apply, reply_markup=keyboard)
 
     del context.chat_data[user_id]
@@ -145,28 +144,30 @@ async def handler(update: Update,
                   context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
     message = update.message.text
+    user_context = context.chat_data.get(user_id)
 
-    if message not in BUTTONS.values() and context.chat_data.get(user_id):
+    if message not in BUTTONS.values() and user_context:
         await context_handler(update=update, context=context, user_id=user_id)
-    elif context.chat_data.get(user_id):
+    if user_context:
         del context.chat_data[user_id]
 
     if update.message.text == BUTTONS.get('about'):
         await about(update, context)
-    elif update.message.text == BUTTONS.get('menu'):
+    if update.message.text == BUTTONS.get('menu'):
         await menu(update, context)
-    elif update.message.text == BUTTONS.get('agenda'):
+    if update.message.text == BUTTONS.get('agenda'):
         await agenda(update, context)
-    elif update.message.text == BUTTONS.get('send_message'):
+    if update.message.text == BUTTONS.get('request_song'):
+        context.chat_data[user_id] = 'request_song'
+        await context.bot.send_message(user_id, 'Write your song:')
+    if update.message.text == BUTTONS.get('send_photo'):
+        context.chat_data[user_id] = 'send_photo'
+        await context.bot.send_message(user_id, 'Send your photo:')
+
+    if update.message.text == BUTTONS.get('send_message'):
         if is_admin(user_id):
             context.chat_data[user_id] = 'send_message'
             await context.bot.send_message(user_id, 'Write your message...')
-    elif update.message.text == BUTTONS.get('request_song'):
-        context.chat_data[user_id] = 'request_song'
-        await context.bot.send_message(user_id, 'Write your song:')
-    elif update.message.text == BUTTONS.get('send_photo'):
-        context.chat_data[user_id] = 'send_photo'
-        await context.bot.send_message(user_id, 'Send your photo:')
 
 
 async def callback_handler(update: Update,
