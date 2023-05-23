@@ -56,6 +56,8 @@ async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
 
+    print(SqlConnector.get_users_id())
+
     user = SqlConnector.get_user(user_id)
     if not user:
         SqlConnector.insert_or_activate_user(user_id)
@@ -93,7 +95,6 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.from_user.id
     menu_doc = open(MENU_FILE, 'rb')
 
-    await context.bot.send_message(chat_id=chat_id, text='One moment...')
     try:
         await context.bot.send_document(chat_id=chat_id, document=menu_doc)
     except error.TimedOut:
@@ -148,7 +149,7 @@ async def handler(update: Update,
 
     if message not in BUTTONS.values() and user_context:
         await context_handler(update=update, context=context, user_id=user_id)
-    if user_context:
+    elif user_context:
         del context.chat_data[user_id]
 
     if update.message.text == BUTTONS.get('about'):

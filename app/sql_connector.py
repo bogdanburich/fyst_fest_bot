@@ -6,7 +6,7 @@ from config import FYST_FEST_DB
 class SqlConnector:
 
     @classmethod
-    def __insert_methos(cls, query):
+    def __insert_methos(cls, query) -> list:
         with sqlite3.connect(FYST_FEST_DB) as conn:
             cursor = conn.cursor()
             cursor.execute(query)
@@ -14,12 +14,12 @@ class SqlConnector:
             cursor.close()
 
     @classmethod
-    def __select_method(cls, query):
+    def __select_method(cls, query) -> list:
         with sqlite3.connect(FYST_FEST_DB) as conn:
             cursor = conn.cursor()
             try:
                 cursor.execute(query)
-                return cursor.fetchall()
+                return [i[0] for i in cursor.fetchall()]
             finally:
                 cursor.close()
 
@@ -50,10 +50,10 @@ class SqlConnector:
     @classmethod
     def get_users_id(cls) -> tuple:
         query = '''SELECT user_id FROM users WHERE is_active = 1;'''
-        return cls.__select_method(query)[0]
+        return cls.__select_method(query)
 
     @classmethod
-    def set_user_active(cls, user_id: int, is_active: bool):
+    def set_user_active(cls, user_id: int, is_active: bool) -> None:
         query = f'''UPDATE users SET is_active = {is_active}
                     WHERE user_id = {user_id};'''
         cls.__insert_methos(query)
