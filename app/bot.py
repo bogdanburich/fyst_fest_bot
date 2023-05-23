@@ -56,8 +56,6 @@ async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
 
-    print(SqlConnector.get_users_id())
-
     user = SqlConnector.get_user(user_id)
     if not user:
         SqlConnector.insert_or_activate_user(user_id)
