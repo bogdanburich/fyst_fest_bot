@@ -76,6 +76,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     keyboard_markup = ReplyKeyboardMarkup(buttons)
 
     await context.bot.send_message(chat_id=user_id, text=texts.HELLO,
+                                   parse_mode='html',
                                    reply_markup=keyboard_markup)
 
 
