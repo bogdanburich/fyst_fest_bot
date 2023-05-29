@@ -2,9 +2,11 @@ import json
 import os
 import sys
 
+import sentry_sdk
 import texts
 from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB, MAX_SONG_LENGTH,
-                    MENU_FILE, MUSIC_CHANNEL_ID, PHOTO_CHANNEL_ID, SCRIPT_FILE)
+                    MENU_FILE, MUSIC_CHANNEL_ID, PHOTO_CHANNEL_ID, SCRIPT_FILE,
+                    SENTRY_DSN)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
@@ -194,6 +196,11 @@ def main():
         SqlConnector.create_database(FYST_FEST_DB, SCRIPT_FILE)
     if not check_creds():
         sys.exit()
+
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        traces_sample_rate=1.0
+    )
 
     application = Application.builder().token(BOT_TOKEN).build()
 

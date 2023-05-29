@@ -42,3 +42,5 @@ SCRIPT_FILE = os.path.join(BASE_DIR, 'migrations', SCRIPT_FILE_NAME)
 FYST_FEST_DB = os.path.join(BASE_DIR, DATABASE_NAME)
 
 MAX_SONG_LENGTH = 32
+
+SENTRY_DSN = os.environ.get('SENTRY_DSN')
