@@ -57,3 +57,8 @@ class SqlConnector:
         query = f'''UPDATE users SET is_active = {is_active}
                     WHERE user_id = {user_id};'''
         cls.__insert_methos(query)
+
+    @classmethod
+    def users_count(cls) -> int:
+        query = '''SELECT count(user_id) FROM users'''
+        return cls.__select_method(query)[0]

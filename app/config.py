@@ -36,7 +36,8 @@ BUTTONS = {
     'menu': '🍕 Menu (Soon)',
     'request_song': '🎵 Request Song',
     'send_photo': '📷 Send Photo',
-    'send_message': '📝 Send message'
+    'send_message': '📝 Send message',
+    'stats': '📊 Stats'
 }
 
 DATABASE_NAME = 'fyst_fest.db'

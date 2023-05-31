@@ -36,7 +36,11 @@ async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
     admin_id = update.callback_query.from_user.id
     users_ids = list(SqlConnector.get_users_id())
-    users_ids.remove(admin_id)
+
+    try:
+        users_ids.remove(admin_id)
+    except ValueError:
+        pass
 
     query = update.callback_query.data
     message_id = json.loads(query)['message_id']
@@ -74,12 +78,20 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     if is_admin(user_id):
         buttons.append([KeyboardButton(BUTTONS['send_message'])])
+        buttons.append([KeyboardButton(BUTTONS['stats'])])
 
     keyboard_markup = ReplyKeyboardMarkup(buttons)
 
     await context.bot.send_message(chat_id=user_id, text=texts.HELLO,
                                    parse_mode='html',
                                    reply_markup=keyboard_markup)
+
+
+async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_chat.id
+    users_cnt = SqlConnector.users_count()
+    message = f'{users_cnt} people activated bot'
+    await context.bot.send_message(chat_id=user_id, text=message)
 
 
 async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -166,10 +178,12 @@ async def handler(update: Update,
         context.chat_data[user_id] = 'send_photo'
         await context.bot.send_message(user_id, 'Send your photo:')
 
-    if update.message.text == BUTTONS.get('send_message'):
-        if is_admin(user_id):
+    if is_admin(user_id):
+        if update.message.text == BUTTONS.get('send_message'):
             context.chat_data[user_id] = 'send_message'
             await context.bot.send_message(user_id, 'Write your message...')
+        if update.message.text == BUTTONS.get('stats'):
+            await stats(update, context)
 
 
 async def callback_handler(update: Update,
