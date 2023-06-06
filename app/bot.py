@@ -96,12 +96,16 @@ async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_chat.id
-    await context.bot.send_message(chat_id=user_id, text=texts.ABOUT)
+    await context.bot.send_message(chat_id=user_id,
+                                   parse_mode='html',
+                                   text=texts.ABOUT)
 
 
 async def agenda(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_chat.id
-    await context.bot.send_message(chat_id=user_id, text=texts.AGENDA)
+    await context.bot.send_message(chat_id=user_id,
+                                   parse_mode='html',
+                                   text=texts.AGENDA)
 
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):

@@ -15,14 +15,50 @@ More mind-blowing info is heading your way soon. Stay tuned and get ready to
 rock FYST FEST like never before! 🤘🔥
 '''
 
-AGENDA = 'Agenda'
+AGENDA = '''
+<b>JUNE 16: welcome to Türkiye</b>
+
+Transfers to the hotel will be announced soon
+
+<b>JUNE 17: your FFF day</b>
+
+06:30 - 10:00 🍳 Enjoy your breakfast in <a href="https://goo.gl/maps/51LRAogMKZwcqGSL7?coh=178571&entry=tt">The Grand Tarabya Hotel</a>
+
+10:15 - 10:30 🛥️ Please follow the yacht to <a href="https://www.google.com/maps?q=41.1395024,29.0578787&hl=ru-RU&gl=ru&entry=gps&lucs=,47071704,47067413&g_ep=CAISBjYuNjguNBgAIKzfASoSLDQ3MDcxNzA0LDQ3MDY3NDEzQgJHRQ%3D%3D&g_st=ic">the pier</a>
+
+10:30 - 12:00 🤗 Join the team activity on the yacht (transfer to the city)
+
+12:00 - 15:00 🌇 Take pleasure in the city walking
+
+15:15 - 15:30 🛥️ Please follow the yacht to the <a href="https://maps.app.goo.gl/jgdmMz5xTy1BSNVg8?g_st=ic">Galataport</a>
+
+15:30 - 17:00 🤗 Join the team activity on the yacht (transfer back to the hotel)
+
+17:00 - 18:30 🦹 Festival preparations or just a rest: take your time!
+
+18:30 - 19:00 💃🏻🕺 Come down to the festival venue, you are already expected!
+
+19:00 - 00:00 🪩 FFF staaaarts
+
+at 00:00 🎤 Afterparty for the strongest
+
+<b>JUNE 18: back home, see you soon!</b>
+
+06:30 - 10:30 🍳 Enjoy your breakfast
+
+07:00-22:00 🧖‍♀️ SPA working hours. Relax after the Festival
+
+Transfers to airports will be announced soon.
+'''
 
 ABOUT = '''
-🔖 Agenda - Get a program for today
+🔖 <b>Agenda</b> – Get the lowdown on all the exciting activities and their timings at our corporate party.
 
-🍕 Menu - Get the menu
+🍕 <b>Menu</b> – Explore the mouthwatering assortment of dishes and snacks available at our corporate party.
 
-🎵 Request Song - Order music
+🎵 <b>Request Song</b> – Want to hear your favorite track at the after-party? Drop the name here and our DJ will make it happen! (After-party starts at 00:00)
 
-📷 Send Photo - Send a photo
+📷 <b>Send Photo</b> – Share your special moments with us! Click this button to send a photo <b>along with a comment</b>, and we'll showcase it on the big screen for everyone to see. Remember, add your comment in the photo's caption, <b>not as a separate message</b>.
+
+<b>Let's dive in and make the most of it!</b>
 '''
