@@ -16,11 +16,11 @@ rock FYST FEST like never before! 🤘🔥
 '''
 
 AGENDA = '''
-<b>JUNE 16: welcome to Türkiye</b>
+<u><b>JUNE 16: welcome to Türkiye</b></u>
 
 Transfers to the hotel will be announced soon
 
-<b>JUNE 17: your FFF day</b>
+<u><b>JUNE 17: your FFF day</b></u>
 
 06:30 - 10:00 🍳 Enjoy your breakfast in <a href="https://goo.gl/maps/51LRAogMKZwcqGSL7?coh=178571&entry=tt">The Grand Tarabya Hotel</a>
 
@@ -42,7 +42,7 @@ Transfers to the hotel will be announced soon
 
 at 00:00 🎤 Afterparty for the strongest
 
-<b>JUNE 18: back home, see you soon!</b>
+<u><b>JUNE 18: back home, see you soon!</b></u>
 
 06:30 - 10:30 🍳 Enjoy your breakfast
 
@@ -56,9 +56,9 @@ ABOUT = '''
 
 🍕 <b>Menu</b> – Explore the mouthwatering assortment of dishes and snacks available at our corporate party.
 
-🎵 <b>Request Song</b> – Want to hear your favorite track at the after-party? Drop the name here and our DJ will make it happen! (After-party starts at 00:00)
+🎵 <b>Request Song</b> – Want to hear your favorite track at the after-party? Drop the name here and our DJ will make it happen! <i>(After-party starts at 00:00)</i>
 
-📷 <b>Send Photo</b> – Share your special moments with us! Click this button to send a photo <b>along with a comment</b>, and we'll showcase it on the big screen for everyone to see. Remember, add your comment in the photo's caption, <b>not as a separate message</b>.
+📷 <b>Send Photo</b> – Share your special moments with us! Click this button to send a photo <u><b>along with a comment</b></u>, and we'll showcase it on the big screen for everyone to see. Remember, add your comment in the photo's caption, <u><b>not as a separate message</b></u>.
 
 <b>Let's dive in and make the most of it!</b>
 '''
