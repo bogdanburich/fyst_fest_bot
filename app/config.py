@@ -34,7 +34,7 @@ BUTTONS = {
     'about': 'ℹ️ About',
     'agenda': '🔖 Agenda',
     'menu': '🍕 Menu (Soon)',
-    'request_song': '🎵 Request Song',
+    'request_song': '🎵 Request Song (after-party)',
     'send_photo': '📷 Send Photo',
     'send_message': '📝 Send message',
     'stats': '📊 Stats'
