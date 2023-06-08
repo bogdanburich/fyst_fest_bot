@@ -11,10 +11,20 @@ from sql_connector import SqlConnector
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
                       KeyboardButton, ReplyKeyboardMarkup, Update, error)
 from telegram.ext import (Application, CallbackQueryHandler, CommandHandler,
-                          ContextTypes, MessageHandler)
+                          ContextTypes, MessageHandler, ChatMemberHandler)
 from utils import is_admin
 
 logger = logs.get_logger(__name__)
+
+
+async def change_user_status(update: Update,
+                             context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.my_chat_member.chat.id
+    status = update.my_chat_member.new_chat_member.status
+    if status == 'kicked':
+        SqlConnector.set_user_inactive(user_id)
+    if status == 'member':
+        SqlConnector.insert_or_activate_user(user_id)
 
 
 async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -63,10 +73,6 @@ async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-
-    user = SqlConnector.get_user(user_id)
-    if not user:
-        SqlConnector.insert_or_activate_user(user_id)
 
     buttons = [
         [
@@ -226,6 +232,7 @@ def main():
     application.add_handler(MessageHandler(BASE_MESSAGE_FILTERS, handler))
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CallbackQueryHandler(callback_handler))
+    application.add_handler(ChatMemberHandler(change_user_status))
 
     application.run_polling()
 
