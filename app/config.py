@@ -7,6 +7,8 @@ load_dotenv()
 
 BASE_DIR = str(Path(__file__).resolve().parent)
 
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'DEV')
+
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 ERRORS = {

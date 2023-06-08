@@ -48,17 +48,17 @@ class SqlConnector:
         return cls.__select_method(query)
 
     @classmethod
-    def get_users_id(cls) -> tuple:
+    def get_user_ids(cls) -> list:
         query = '''SELECT user_id FROM users WHERE is_active = 1;'''
-        return cls.__select_method(query)
+        return list(cls.__select_method(query))
 
     @classmethod
-    def set_user_active(cls, user_id: int, is_active: bool) -> None:
-        query = f'''UPDATE users SET is_active = {is_active}
+    def set_user_inactive(cls, user_id: int) -> None:
+        query = f'''UPDATE users SET is_active = 0
                     WHERE user_id = {user_id};'''
         cls.__insert_methos(query)
 
     @classmethod
     def users_count(cls) -> int:
-        query = '''SELECT count(user_id) FROM users'''
+        query = '''SELECT count(user_id) FROM users WHERE is_active = 1;'''
         return cls.__select_method(query)[0]

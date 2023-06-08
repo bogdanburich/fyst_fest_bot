@@ -2,11 +2,10 @@ import json
 import os
 import sys
 
-import sentry_sdk
 import texts
+import logs
 from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB, MAX_SONG_LENGTH,
-                    MENU_FILE, MUSIC_CHANNEL_ID, PHOTO_CHANNEL_ID, SCRIPT_FILE,
-                    SENTRY_DSN)
+                    MENU_FILE, MUSIC_CHANNEL_ID, PHOTO_CHANNEL_ID, SCRIPT_FILE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
@@ -14,6 +13,8 @@ from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
 from telegram.ext import (Application, CallbackQueryHandler, CommandHandler,
                           ContextTypes, MessageHandler)
 from utils import is_admin
+
+logger = logs.get_logger(__name__)
 
 
 async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -35,7 +36,7 @@ async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
     admin_id = update.callback_query.from_user.id
-    users_ids = list(SqlConnector.get_users_id())
+    users_ids = SqlConnector.get_user_ids()
 
     try:
         users_ids.remove(admin_id)
@@ -52,11 +53,12 @@ async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                               from_chat_id=admin_id,
                                               message_id=message_id)
             message_counter += 1
-        except error.BadRequest:
-            SqlConnector.set_user_active(admin_id, False)
+        except error.Forbidden:
+            SqlConnector.set_user_inactive(admin_id)
 
     admin_message = f'{message_counter} people got message'
     await context.bot.send_message(admin_id, text=admin_message)
+    logger.info('Message has been sent')
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -197,9 +199,11 @@ async def callback_handler(update: Update,
 
     action = json.loads(update.callback_query.data)['action']
     if action == 'send':
+        await context.bot.delete_message(chat_id, message_id)
         await send_everyone(update, context)
     elif action == 'delete':
         await context.bot.delete_message(chat_id, message_id)
+        logger.info('Message has been deleted')
 
 
 def check_creds() -> bool:
@@ -215,10 +219,7 @@ def main():
     if not check_creds():
         sys.exit()
 
-    sentry_sdk.init(
-        dsn=SENTRY_DSN,
-        traces_sample_rate=1.0
-    )
+    logs.init_logging()
 
     application = Application.builder().token(BOT_TOKEN).build()
 
