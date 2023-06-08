@@ -2,16 +2,16 @@ import json
 import os
 import sys
 
-import texts
 import logs
+import texts
 from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB, MAX_SONG_LENGTH,
                     MENU_FILE, MUSIC_CHANNEL_ID, PHOTO_CHANNEL_ID, SCRIPT_FILE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
                       KeyboardButton, ReplyKeyboardMarkup, Update, error)
-from telegram.ext import (Application, CallbackQueryHandler, CommandHandler,
-                          ContextTypes, MessageHandler, ChatMemberHandler)
+from telegram.ext import (Application, CallbackQueryHandler, ChatMemberHandler,
+                          CommandHandler, ContextTypes, MessageHandler)
 from utils import is_admin
 
 logger = logs.get_logger(__name__)

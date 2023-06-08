@@ -1,6 +1,6 @@
 import logging
-import sentry_sdk
 
+import sentry_sdk
 from config import ENVIRONMENT, SENTRY_DSN
 
 FORMAT = '''[%(asctime)s] %(levelname)s [%(name)s:%(filename)s:%(lineno)s]%(message)s'''  # noqa: E501
