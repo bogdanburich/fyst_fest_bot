@@ -37,7 +37,7 @@ MENU_FILE = os.path.join(BASE_DIR, 'static/menu.pdf')
 BUTTONS = {
     'about': 'ℹ️ About',
     'agenda': '🔖 Agenda',
-    'menu': '🍕 Menu (Soon)',
+    'menu': '🍕 Menu',
     'request_song': '🎵 Request Song (after-party)',
     'send_photo': '📷 Send Photo',
     'send_message': '📝 Send message',

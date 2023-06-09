@@ -136,7 +136,8 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     #     pass
     await context.bot.send_message(chat_id=user_id,
                                    parse_mode='html',
-                                   text=texts.MENU)
+                                   text=texts.MENU,
+                                   disable_web_page_preview=True)
 
 
 async def send_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -147,6 +148,8 @@ async def send_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.forward_message(chat_id=PHOTO_CHANNEL_ID,
                                           from_chat_id=user_id,
                                           message_id=message_id)
+        await context.bot.send_message(chat_id=user_id,
+                                       text='Photo has been sent')
 
 
 async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
