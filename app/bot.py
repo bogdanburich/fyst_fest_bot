@@ -4,17 +4,30 @@ import sys
 
 import logs
 import texts
-from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB, MAX_SONG_LENGTH,
-                    MUSIC_CHANNEL_ID, PHOTO_CHANNEL_ID, SCRIPT_FILE)
+from config import (ADMIN_IDS, BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB,
+                    MAX_SONG_LENGTH, MUSIC_CHANNEL_ID, PHOTO_CHANNEL_ID,
+                    SCRIPT_FILE)
+from exceptions import ValidationError
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
                       KeyboardButton, ReplyKeyboardMarkup, Update)
 from telegram.ext import (Application, CallbackQueryHandler, ChatMemberHandler,
                           CommandHandler, ContextTypes, MessageHandler)
-from utils import is_admin
+from validators import is_admin, is_photo_valid
 
 logger = logs.get_logger(__name__)
+
+
+def set_context(context: ContextTypes.DEFAULT_TYPE, user_id: int, action: str):
+    context.chat_data[user_id] = {'action': action}
+
+
+async def send_error(update: Update, context: ContextTypes.DEFAULT_TYPE,
+                     text: str):
+    user_id = update.message.from_user.id
+    await context.bot.send_message(chat_id=user_id,
+                                   text=text)
 
 
 async def change_user_status(update: Update,
@@ -81,7 +94,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         [KeyboardButton(BUTTONS['send_photo'])],
     ]
 
-    if is_admin(user_id):
+    if user_id in ADMIN_IDS:
         buttons.append([KeyboardButton(BUTTONS['send_message'])])
         buttons.append([KeyboardButton(BUTTONS['stats'])])
 
@@ -129,12 +142,11 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def send_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_id = update.message.id
     user_id = update.message.from_user.id
-    if not update.message.photo:
-        await context.bot.send_message(user_id, ERRORS['not_photo'])
-        return
-    await context.bot.forward_message(chat_id=PHOTO_CHANNEL_ID,
-                                      from_chat_id=user_id,
-                                      message_id=message_id)
+
+    if is_photo_valid(update, context):
+        await context.bot.forward_message(chat_id=PHOTO_CHANNEL_ID,
+                                          from_chat_id=user_id,
+                                          message_id=message_id)
 
 
 async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -158,11 +170,13 @@ async def request_song(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def context_handler(update: Update, context: ContextTypes.DEFAULT_TYPE,
                           user_id: int):
-    if context.chat_data[user_id] == 'send_message' and is_admin(user_id):
+    action = context.chat_data[user_id]['action']
+
+    if action == 'send_message':
         await get_apply(update, context)
-    elif context.chat_data[user_id] == 'request_song':
+    elif action == 'request_song':
         await request_song(update, context)
-    elif context.chat_data[user_id] == 'send_photo':
+    elif action == 'send_photo':
         await send_photo(update, context)
 
 
@@ -171,31 +185,40 @@ async def handler(update: Update,
     user_id = update.message.from_user.id
     message = update.message.text
     user_context = context.chat_data.get(user_id)
+    bot = context.bot
 
-    if message not in BUTTONS.values() and user_context:
-        await context_handler(update=update, context=context, user_id=user_id)
-    elif user_context:
-        del context.chat_data[user_id]
+    try:
 
-    if update.message.text == BUTTONS.get('about'):
-        await about(update, context)
-    if update.message.text == BUTTONS.get('menu'):
-        await menu(update, context)
-    if update.message.text == BUTTONS.get('agenda'):
-        await agenda(update, context)
-    if update.message.text == BUTTONS.get('request_song'):
-        context.chat_data[user_id] = 'request_song'
-        await context.bot.send_message(user_id, 'Write your song:')
-    if update.message.text == BUTTONS.get('send_photo'):
-        context.chat_data[user_id] = 'send_photo'
-        await context.bot.send_message(user_id, 'Send your photo:')
+        if message not in BUTTONS.values() and user_context:
+            await context_handler(update=update, context=context,
+                                  user_id=user_id)
+        elif user_context:
+            del context.chat_data[user_id]
 
-    if is_admin(user_id):
-        if update.message.text == BUTTONS.get('send_message'):
-            context.chat_data[user_id] = 'send_message'
-            await context.bot.send_message(user_id, 'Write your message...')
-        if update.message.text == BUTTONS.get('stats'):
+        if message == BUTTONS.get('about'):
+            await about(update, context)
+        if message == BUTTONS.get('menu'):
+            await menu(update, context)
+        if message == BUTTONS.get('agenda'):
+            await agenda(update, context)
+        if message == BUTTONS.get('request_song'):
+            set_context(context, user_id, 'request_song')
+            await bot.send_message(user_id, 'Write your song:')
+        if message == BUTTONS.get('send_photo'):
+            set_context(context, user_id, 'send_photo')
+            await bot.send_message(user_id, 'Send your photo:')
+
+        if message == BUTTONS.get('send_message'):
+            is_admin(user_id)
+            set_context(context, user_id, 'send_message')
+            await bot.send_message(user_id, 'Write your message:')
+        if message == BUTTONS.get('stats'):
+            is_admin(user_id)
             await stats(update, context)
+
+    except ValidationError as e:
+
+        await send_error(update, context, e.message)
 
 
 async def callback_handler(update: Update,

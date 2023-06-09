@@ -13,7 +13,10 @@ BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 ERRORS = {
     'name_too_long': 'Name is too long, try again:',
-    'not_photo': 'It is not photo, try again:'
+    'not_photo': 'It is not photo, try again:',
+    'no_caption': 'There is no caption in image, try again:',
+    'photo_group': 'One photo per message, try again:',
+    'not_allowed': 'You\'re not allowed to perform this action'
 }
 
 ADMIN_IDS = (
