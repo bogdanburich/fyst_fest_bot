@@ -62,3 +62,5 @@ ABOUT = '''
 
 <b>Let's dive in and make the most of it!</b>
 '''
+
+MENU = '<a href="https://fyst.com/uploads/userfiles/FFF_Menu.pdf">Menu</a>'

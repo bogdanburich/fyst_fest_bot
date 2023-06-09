@@ -5,11 +5,11 @@ import sys
 import logs
 import texts
 from config import (BOT_TOKEN, BUTTONS, ERRORS, FYST_FEST_DB, MAX_SONG_LENGTH,
-                    MENU_FILE, MUSIC_CHANNEL_ID, PHOTO_CHANNEL_ID, SCRIPT_FILE)
+                    MUSIC_CHANNEL_ID, PHOTO_CHANNEL_ID, SCRIPT_FILE)
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
-                      KeyboardButton, ReplyKeyboardMarkup, Update, error)
+                      KeyboardButton, ReplyKeyboardMarkup, Update)
 from telegram.ext import (Application, CallbackQueryHandler, ChatMemberHandler,
                           CommandHandler, ContextTypes, MessageHandler)
 from utils import is_admin
@@ -114,13 +114,16 @@ async def agenda(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    chat_id = update.message.from_user.id
-    menu_doc = open(MENU_FILE, 'rb')
+    user_id = update.message.from_user.id
+    # menu_doc = open(MENU_FILE, 'rb')
 
-    try:
-        await context.bot.send_document(chat_id=chat_id, document=menu_doc)
-    except error.TimedOut:
-        pass
+    # try:
+    #     await context.bot.send_document(chat_id=chat_id, document=menu_doc)
+    # except error.TimedOut:
+    #     pass
+    await context.bot.send_message(chat_id=user_id,
+                                   parse_mode='html',
+                                   text=texts.MENU)
 
 
 async def send_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
