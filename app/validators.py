@@ -20,7 +20,5 @@ def is_photo_valid(update, context) -> bool:
         raise ValidationError(ERRORS['photo_group'])
     if not message.photo:
         raise ValidationError(ERRORS['not_photo'])
-    if not message.caption:
-        raise ValidationError(ERRORS['no_caption'])
 
     return True
