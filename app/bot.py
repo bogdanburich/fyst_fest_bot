@@ -89,7 +89,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             KeyboardButton(BUTTONS['about']),
             KeyboardButton(BUTTONS['agenda'])
         ],
-        [KeyboardButton(BUTTONS['menu'])],
+        # [KeyboardButton(BUTTONS['menu'])],
         [KeyboardButton(BUTTONS['request_song'])],
         [KeyboardButton(BUTTONS['send_photo'])],
     ]
@@ -126,18 +126,18 @@ async def agenda(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                    text=texts.AGENDA)
 
 
-async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.message.from_user.id
-    # menu_doc = open(MENU_FILE, 'rb')
+# async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+#     user_id = update.message.from_user.id
+#     # menu_doc = open(MENU_FILE, 'rb')
 
-    # try:
-    #     await context.bot.send_document(chat_id=chat_id, document=menu_doc)
-    # except error.TimedOut:
-    #     pass
-    await context.bot.send_message(chat_id=user_id,
-                                   parse_mode='html',
-                                   text=texts.MENU,
-                                   disable_web_page_preview=True)
+#     # try:
+#     #     await context.bot.send_document(chat_id=chat_id, document=menu_doc)
+#     # except error.TimedOut:
+#     #     pass
+#     await context.bot.send_message(chat_id=user_id,
+#                                    parse_mode='html',
+#                                    text=texts.MENU,
+#                                    disable_web_page_preview=True)
 
 
 async def send_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -200,8 +200,8 @@ async def handler(update: Update,
 
         if message == BUTTONS.get('about'):
             await about(update, context)
-        if message == BUTTONS.get('menu'):
-            await menu(update, context)
+        # if message == BUTTONS.get('menu'):
+        #     await menu(update, context)
         if message == BUTTONS.get('agenda'):
             await agenda(update, context)
         if message == BUTTONS.get('request_song'):

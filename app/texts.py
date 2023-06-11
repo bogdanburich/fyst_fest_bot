@@ -54,8 +54,6 @@ Transfers to airports will be announced soon.
 ABOUT = '''
 🔖 <b>Agenda</b> – Get the lowdown on all the exciting activities and their timings at our corporate party.
 
-🍕 <b>Menu</b> – Explore the mouthwatering assortment of dishes and snacks available at our corporate party.
-
 🎵 <b>Request Song</b> – Want to hear your favorite track at the after-party? Drop the name here and our DJ will make it happen! <i>(After-party starts at 00:00)</i>
 
 📷 <b>Send Photo</b> – Share your special moments with us! Click this button to send a photo <u><b>along with a comment</b></u>, and we'll showcase it on the big screen for everyone to see. Remember, add your comment in the photo's caption, <u><b>not as a separate message</b></u>.
@@ -63,4 +61,6 @@ ABOUT = '''
 <b>Let's dive in and make the most of it!</b>
 '''
 
-MENU = '<a href="https://fyst.com/uploads/userfiles/FFF_Menu.pdf">Menu</a>'
+# 🍕 <b>Menu</b> – Explore the mouthwatering assortment of dishes and snacks available at our corporate party.
+
+# MENU = '<a href="https://fyst.com/uploads/userfiles/FFF_Menu.pdf">Menu</a>'
