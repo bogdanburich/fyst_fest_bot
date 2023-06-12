@@ -44,11 +44,18 @@ at 00:00 🎤 Afterparty for the strongest
 
 <u><b>JUNE 18: back home, see you soon!</b></u>
 
-06:30 - 10:30 🍳 Enjoy your breakfast
+06:30-10:30 🍳 Enjoy your breakfast
+07:00-22:00 🧖‍♀️ SPA working hours. Relax after the Festival
 
-07:00-22:00 🧖‍♀️ SPA working hours. Relax after the Festival
+11:00 Pick-up transfer time. Flights: BT712 Riga Air Baltic, A3993 to Athens, TK 1909 Zürich
 
-Transfers to airports will be announced soon.
+11:30 Pick-up transfer time. Flights: TK1775 Riga Turkish Airline, TK1765 Warsaw
+
+13:00 Pick-up transfer time. Flights: LO136 Warsaw, TK1887 Vienna
+
+15:30 Pick-up transfer time. Flights: TK411 Moscow, TK403 Saint Petersburg, B2786 Minsk
+
+17:45 Pick-up transfer time. Flight: TK 7722 Tbilisi
 '''
 
 ABOUT = '''
