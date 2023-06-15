@@ -1,7 +1,6 @@
 import sqlite3
 
 import logs
-
 from config import FYST_FEST_DB
 
 logger = logs.get_logger(__name__)
