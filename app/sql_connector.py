@@ -42,7 +42,7 @@ class SqlConnector:
                  VALUES({user_id})
                  ON CONFLICT(user_id) DO UPDATE SET is_active = 1;'''
         cls.__insert_methos(query)
-        logger.info(f'User {user_id} has activated bot')
+        logger.info(f'User {user_id} has been added / activated')
 
     @classmethod
     def get_user(cls, user_id: str) -> tuple:

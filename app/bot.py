@@ -29,7 +29,7 @@ async def error_handler(update: Update, context):
     if isinstance(e, (httpx.HTTPError, error.NetworkError)):
         logger.warn(f'Network error {e.__class__}:{e} handled')
     else:
-        logger.error(e)
+        raise e
 
 
 async def send_error(update: Update, context: ContextTypes.DEFAULT_TYPE,
@@ -39,8 +39,8 @@ async def send_error(update: Update, context: ContextTypes.DEFAULT_TYPE,
                                    text=text)
 
 
-def deactivate_user(update: Update,
-                    context: ContextTypes.DEFAULT_TYPE):
+async def deactivate_user(update: Update,
+                          context: ContextTypes.DEFAULT_TYPE):
     user_id = update.my_chat_member.chat.id
     status = update.my_chat_member.new_chat_member.status
     if status == 'kicked':
@@ -118,6 +118,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await context.bot.send_message(chat_id=user_id, text=texts.HELLO,
                                    parse_mode='html',
                                    reply_markup=keyboard_markup)
+    logger.info(f'User {user_id} has started bot')
 
 
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
