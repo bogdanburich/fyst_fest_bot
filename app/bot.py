@@ -29,7 +29,7 @@ async def error_handler(update: Update, context):
     if isinstance(e, (httpx.HTTPError, error.NetworkError)):
         logger.warn(f'Network error {e.__class__}:{e} handled')
     else:
-        raise e
+        logger.error(e)
 
 
 async def send_error(update: Update, context: ContextTypes.DEFAULT_TYPE,
