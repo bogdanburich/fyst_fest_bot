@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import httpx
 
 import logs
 import texts
@@ -11,7 +12,7 @@ from exceptions import ValidationError
 from filters import BASE_MESSAGE_FILTERS
 from sql_connector import SqlConnector
 from telegram import (InlineKeyboardButton, InlineKeyboardMarkup,
-                      KeyboardButton, ReplyKeyboardMarkup, Update)
+                      KeyboardButton, ReplyKeyboardMarkup, Update, error)
 from telegram.ext import (Application, CallbackQueryHandler, ChatMemberHandler,
                           CommandHandler, ContextTypes, MessageHandler)
 from validators import is_admin, is_photo_valid
@@ -23,6 +24,14 @@ def set_context(context: ContextTypes.DEFAULT_TYPE, user_id: int, action: str):
     context.chat_data[user_id] = {'action': action}
 
 
+async def error_handler(update: Update, context):
+    e = context.error
+    if isinstance(e, (httpx.HTTPError, error.NetworkError)):
+        logger.warn(f'Network error {e.__class__}:{e} handled')
+    else:
+        raise e
+
+
 async def send_error(update: Update, context: ContextTypes.DEFAULT_TYPE,
                      text: str):
     user_id = update.message.from_user.id
@@ -30,14 +39,12 @@ async def send_error(update: Update, context: ContextTypes.DEFAULT_TYPE,
                                    text=text)
 
 
-async def change_user_status(update: Update,
-                             context: ContextTypes.DEFAULT_TYPE):
+def deactivate_user(update: Update,
+                    context: ContextTypes.DEFAULT_TYPE):
     user_id = update.my_chat_member.chat.id
     status = update.my_chat_member.new_chat_member.status
     if status == 'kicked':
         SqlConnector.set_user_inactive(user_id)
-    if status == 'member':
-        SqlConnector.insert_or_activate_user(user_id)
 
 
 async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -59,10 +66,10 @@ async def get_apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
     admin_id = update.callback_query.from_user.id
-    users_ids = SqlConnector.get_user_ids()
+    user_ids = SqlConnector.get_user_ids()
 
     try:
-        users_ids.remove(admin_id)
+        user_ids.remove(admin_id)
     except ValueError:
         pass
 
@@ -70,19 +77,27 @@ async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_id = json.loads(query)['message_id']
 
     message_counter = 0
-    for user_id in users_ids:
-        await context.bot.forward_message(chat_id=user_id,
-                                          from_chat_id=admin_id,
-                                          message_id=message_id)
-        message_counter += 1
+    for user_id in user_ids:
+        try:
+            await context.bot.forward_message(chat_id=user_id,
+                                              from_chat_id=admin_id,
+                                              message_id=message_id)
+            message_counter += 1
+
+        except error.Forbidden:
+            SqlConnector.set_user_inactive(user_id)
 
     admin_message = f'{message_counter} people got message'
     await context.bot.send_message(admin_id, text=admin_message)
-    logger.info('Message has been sent')
+    logger.info(f'Message has been sent to {user_ids}')
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
+    user = SqlConnector.get_user(user_id)
+
+    if not user:
+        SqlConnector.insert_or_activate_user(user_id)
 
     buttons = [
         [
@@ -253,12 +268,16 @@ def main():
 
     logs.init_logging()
 
-    application = Application.builder().token(BOT_TOKEN).build()
+    application = (Application
+                   .builder()
+                   .token(BOT_TOKEN)
+                   .build())
 
     application.add_handler(MessageHandler(BASE_MESSAGE_FILTERS, handler))
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CallbackQueryHandler(callback_handler))
-    application.add_handler(ChatMemberHandler(change_user_status))
+    application.add_handler(ChatMemberHandler(deactivate_user))
+    application.add_error_handler(error_handler)
 
     application.run_polling()
 

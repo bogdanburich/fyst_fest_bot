@@ -1,6 +1,10 @@
 import sqlite3
 
+import logs
+
 from config import FYST_FEST_DB
+
+logger = logs.get_logger(__name__)
 
 
 class SqlConnector:
@@ -34,12 +38,12 @@ class SqlConnector:
                 cursor.close()
 
     @classmethod
-    def insert_or_activate_user(cls, user_id: int, is_active: str = ''
-                                ) -> None:
+    def insert_or_activate_user(cls, user_id: int) -> None:
         query = f'''INSERT INTO users(user_id)
                  VALUES({user_id})
                  ON CONFLICT(user_id) DO UPDATE SET is_active = 1;'''
         cls.__insert_methos(query)
+        logger.info(f'User {user_id} has activated bot')
 
     @classmethod
     def get_user(cls, user_id: str) -> tuple:
@@ -57,6 +61,7 @@ class SqlConnector:
         query = f'''UPDATE users SET is_active = 0
                     WHERE user_id = {user_id};'''
         cls.__insert_methos(query)
+        logger.info(f'User {user_id} has been deactivated')
 
     @classmethod
     def users_count(cls) -> int:
