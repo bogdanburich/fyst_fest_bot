@@ -77,19 +77,21 @@ async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_id = json.loads(query)['message_id']
 
     message_counter = 0
+    message_sent_ids = []
     for user_id in user_ids:
         try:
             await context.bot.forward_message(chat_id=user_id,
                                               from_chat_id=admin_id,
                                               message_id=message_id)
             message_counter += 1
+            message_sent_ids.append(user_id)
 
         except error.Forbidden:
             SqlConnector.set_user_inactive(user_id)
 
     admin_message = f'{message_counter} people got message'
     await context.bot.send_message(admin_id, text=admin_message)
-    logger.info(f'Message has been sent to {user_ids}')
+    logger.info(f'Message has been sent to {message_sent_ids}')
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
