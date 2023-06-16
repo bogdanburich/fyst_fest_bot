@@ -45,9 +45,10 @@ class SqlConnector:
         logger.info(f'User {user_id} has been added / activated')
 
     @classmethod
-    def get_user(cls, user_id: str) -> tuple:
+    def get_active_user(cls, user_id: str) -> tuple:
         query = f'''SELECT user_id, is_active
-                    FROM users WHERE user_id = {user_id};'''
+                    FROM users WHERE user_id = {user_id}
+                    AND is_active = 1;'''
         return cls.__select_method(query)
 
     @classmethod

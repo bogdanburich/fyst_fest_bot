@@ -96,10 +96,9 @@ async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-    user = SqlConnector.get_user(user_id)
-
     logger.info(f'User {user_id} has started bot')
 
+    user = SqlConnector.get_active_user(user_id)
     if not user:
         SqlConnector.insert_or_activate_user(user_id)
 
