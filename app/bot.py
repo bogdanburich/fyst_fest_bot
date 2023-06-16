@@ -98,6 +98,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
     user = SqlConnector.get_user(user_id)
 
+    logger.info(f'User {user_id} has started bot')
+
     if not user:
         SqlConnector.insert_or_activate_user(user_id)
 
@@ -120,7 +122,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await context.bot.send_message(chat_id=user_id, text=texts.HELLO,
                                    parse_mode='html',
                                    reply_markup=keyboard_markup)
-    logger.info(f'User {user_id} has started bot')
 
 
 async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
