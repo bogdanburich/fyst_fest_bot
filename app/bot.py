@@ -86,7 +86,7 @@ async def send_everyone(update: Update, context: ContextTypes.DEFAULT_TYPE):
             message_counter += 1
             message_sent_ids.append(user_id)
 
-        except error.Forbidden:
+        except (error.Forbidden, error.BadRequest):
             SqlConnector.set_user_inactive(user_id)
 
     admin_message = f'{message_counter} people got message'
